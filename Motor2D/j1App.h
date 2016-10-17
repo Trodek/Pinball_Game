@@ -14,6 +14,7 @@ class j1Audio;
 class j1FileSystem;
 class j1Scene;
 class ModulePhysics;
+class PinballBoard;
 
 class j1App
 {
@@ -85,6 +86,7 @@ public:
 	j1Scene*			scene;
 	j1FileSystem*		fs;
 	ModulePhysics*		physics;
+	PinballBoard*		pinball;
 
 private:
 

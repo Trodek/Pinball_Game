@@ -21,14 +21,9 @@
   <file_system>
     <path>data.zip</path>
   </file_system>
-
-  <map>
-    <folder>maps/</folder>
-    <draw_margin value="1"/>
-  </map>
   
   <scene>
-    <default_map map="iso2.tmx"/>
+   
   </scene>
 
 </config>

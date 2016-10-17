@@ -8,12 +8,11 @@
 #include "j1Window.h"
 #include "j1Scene.h"
 #include "ModulePhysics.h"
+#include "PinballBoard.h"
 
 j1Scene::j1Scene() : j1Module()
 {
 	name.create("scene");
-	background.rect = walls.rect = { 0,0,590,500 };
-	ball_sprite.rect = { 0,0,13,13 };
 
 }
 
@@ -35,12 +34,6 @@ bool j1Scene::Awake(pugi::xml_node& node)
 // Called before the first frame
 bool j1Scene::Start()
 {
-	
-	walls.image = App->tex->Load("Sprites/Walls.png");
-	background.image = App->tex->Load("Sprites/background.png");
-	ball_sprite.image = App->tex->Load("Sprites/ball.png");
-	ball = App->physics->CreateCircle(100, 100, 6);
-
 	return true;
 }
 
@@ -76,13 +69,7 @@ bool j1Scene::Update(float dt)
 		App->physics->CreateCircle(x, y, 6);
 	}
 	
-	App->render->Blit(background.image, 0, 0, &background.rect);
-
-	int ball_x, ball_y;
-	ball->GetPosition(ball_x, ball_y);
-	App->render->Blit(ball_sprite.image, ball_x, ball_y, &ball_sprite.rect, 1.0f, ball->GetRotation());
-	App->render->Blit(walls.image, 0, 0, &walls.rect);
-
+	App->pinball->Draw();
 	return true;
 }
 

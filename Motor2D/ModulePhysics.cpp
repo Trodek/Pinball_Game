@@ -38,151 +38,6 @@ bool ModulePhysics::Start()
 
 	// creating staic shape for ground
 
-	b2BodyDef body;
-	body.type = b2_staticBody;
-	body.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
-
-	b2Body* walls = world->CreateBody(&body);
-
-	int wallshape[240] = {
-		136, 498,
-		212, 498,
-		212, 478,
-		214, 474,
-		229, 467,
-		231, 456,
-		281, 432,
-		287, 425,
-		290, 417,
-		294, 412,
-		297, 417,
-		299, 424,
-		305, 432,
-		355, 455,
-		358, 467,
-		375, 478,
-		375, 498,
-		455, 497,
-		455, 487,
-		472, 476,
-		531, 447,
-		531, 372,
-		522, 354,
-		523, 347,
-		531, 338,
-		538, 336,
-		545, 328,
-		544, 318,
-		534, 314,
-		525, 317,
-		522, 324,
-		512, 332,
-		505, 330,
-		506, 325,
-		527, 300,
-		536, 292,
-		542, 279,
-		542, 266,
-		541, 243,
-		545, 230,
-		532, 221,
-		530, 214,
-		522, 228,
-		510, 227,
-		480, 179,
-		479, 174,
-		497, 147,
-		505, 124,
-		508, 104,
-		507, 77,
-		496, 50,
-		477, 30,
-		453, 19,
-		433, 14,
-		407, 14,
-		385, 18,
-		365, 24,
-		349, 32,
-		330, 50,
-		325, 56,
-		324, 46,
-		322, 27,
-		314, 18,
-		303, 13,
-		288, 13,
-		272, 24,
-		265, 39,
-		267, 48,
-		261, 51,
-		231, 26,
-		195, 15,
-		146, 12,
-		118, 22,
-		99, 39,
-		85, 55,
-		77, 79,
-		80, 108,
-		82, 125,
-		88, 135,
-		105, 151,
-		116, 165,
-		125, 184,
-		122, 188,
-		102, 201,
-		76, 224,
-		73, 224,
-		65, 211,
-		59, 184,
-		57, 162,
-		58, 129,
-		57, 117,
-		51, 112,
-		45, 112,
-		38, 117,
-		37, 122,
-		34, 170,
-		37, 201,
-		43, 235,
-		50, 259,
-		58, 276,
-		58, 281,
-		53, 283,
-		55, 290,
-		71, 309,
-		84, 324,
-		87, 328,
-		84, 333,
-		75, 330,
-		70, 325,
-		66, 316,
-		54, 314,
-		47, 319,
-		45, 328,
-		51, 335,
-		58, 338,
-		68, 348,
-		68, 355,
-		58, 372,
-		58, 448,
-		137, 486
-	};
-	int size = 240;
-
-	b2ChainShape shape;
-	b2Vec2* p = new b2Vec2[size / 2];
-
-	for (uint i = 0; i < size / 2; ++i)
-	{
-		p[i].x = PIXEL_TO_METERS(wallshape[i * 2 + 0]);
-		p[i].y = PIXEL_TO_METERS(wallshape[i * 2 + 1]);
-	}
-
-	shape.CreateLoop(p, size / 2);
-
-	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	walls->CreateFixture(&fixture);
-
 	return true;
 }
 
@@ -229,10 +84,59 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	return pbody;
 }
 
+PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius)
+{
+	b2BodyDef body;
+	body.type = b2_staticBody;
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body);
+
+	b2CircleShape shape;
+	shape.m_radius = PIXEL_TO_METERS(radius);
+	b2FixtureDef fixture;
+	fixture.shape = &shape;
+	fixture.density = 1.0f;
+
+	b->CreateFixture(&fixture);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->SetUserData(pbody);
+	pbody->width = pbody->height = radius;
+
+	return pbody;
+}
+
 PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body);
+	b2PolygonShape box;
+	box.SetAsBox(PIXEL_TO_METERS(width) * 0.5f, PIXEL_TO_METERS(height) * 0.5f);
+
+	b2FixtureDef fixture;
+	fixture.shape = &box;
+	fixture.density = 1.0f;
+
+	b->CreateFixture(&fixture);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->SetUserData(pbody);
+	pbody->width = width * 0.5f;
+	pbody->height = height * 0.5f;
+
+	return pbody;
+}
+
+PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int height)
+{
+	b2BodyDef body;
+	body.type = b2_staticBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
@@ -293,6 +197,40 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 	b2Vec2* p = new b2Vec2[size / 2];
 
 	for(uint i = 0; i < size / 2; ++i)
+	{
+		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
+		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
+	}
+
+	shape.CreateLoop(p, size / 2);
+
+	b2FixtureDef fixture;
+	fixture.shape = &shape;
+
+	b->CreateFixture(&fixture);
+
+	delete p;
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->SetUserData(pbody);
+	pbody->width = pbody->height = 0;
+
+	return pbody;
+}
+
+PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size)
+{
+	b2BodyDef body;
+	body.type = b2_staticBody;
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body);
+
+	b2ChainShape shape;
+	b2Vec2* p = new b2Vec2[size / 2];
+
+	for (uint i = 0; i < size / 2; ++i)
 	{
 		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
 		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);

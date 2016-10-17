@@ -3,9 +3,6 @@
 
 #include "j1Module.h"
 
-struct Sprite;
-class PhysBody;
-
 class j1Scene : public j1Module
 {
 public:
@@ -35,13 +32,6 @@ public:
 
 private:
 
-	p2SString	default_map;
-
-	Sprite		walls;
-	Sprite		background;
-
-	PhysBody*	ball;
-	Sprite		ball_sprite;
 };
 
 #endif // __j1SCENE_H__

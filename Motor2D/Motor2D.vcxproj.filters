@@ -37,6 +37,9 @@
     <ClCompile Include="ModulePhysics.cpp">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="PinballBoard.cpp">
+      <Filter>Desenvolupament  ========\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -92,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="ModulePhysics.h">
       <Filter>Desenvolupament  ========\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="PinballBoard.h">
+      <Filter>Desenvolupament  ========\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
