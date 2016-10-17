@@ -3,7 +3,8 @@
 
 #include "j1Module.h"
 
-struct SDL_Texture;
+struct Sprite;
+class PhysBody;
 
 class j1Scene : public j1Module
 {
@@ -34,7 +35,13 @@ public:
 
 private:
 
-	p2SString default_map;
+	p2SString	default_map;
+
+	Sprite		walls;
+	Sprite		background;
+
+	PhysBody*	ball;
+	Sprite		ball_sprite;
 };
 
 #endif // __j1SCENE_H__

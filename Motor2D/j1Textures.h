@@ -7,6 +7,9 @@
 struct SDL_Texture;
 struct SDL_Surface;
 
+
+
+
 class j1Textures : public j1Module
 {
 public:

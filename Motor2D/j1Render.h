@@ -5,6 +5,11 @@
 #include "p2Point.h"
 #include "j1Module.h"
 
+struct Sprite {
+	SDL_Texture* image = nullptr;
+	SDL_Rect rect;
+};
+
 class j1Render : public j1Module
 {
 public:
