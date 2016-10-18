@@ -1,0 +1,9 @@
+// Pivot 0, 0
+int background[2] = {
+	494, 385
+};
+
+// Pivot 0.000000, 0.000000
+float background[2] = {
+	0.837288f, 0.770000f
+};
