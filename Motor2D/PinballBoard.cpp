@@ -14,6 +14,9 @@ PinballBoard::PinballBoard() : j1Module()
 	name.create("scene");
 	background.rect = walls.rect = { 0,0,590,500 };
 	ball_sprite.rect = { 0,0,13,13 };
+	yellowsticker.rect = { 0,0,30,31 };
+	bluesticker.rect = { 0,0,37,34 };
+	greysticker.rect = { 0,0,28,28 };
 
 }
 
@@ -34,11 +37,17 @@ bool PinballBoard::Awake(pugi::xml_node& node)
 bool PinballBoard::Start()
 {
 	CreateBoardPhyisics();
+	CreateStickersCollisions();
 
 	walls.image = App->tex->Load("Sprites/Walls.png");
 	background.image = App->tex->Load("Sprites/background.png");
+
 	ball_sprite.image = App->tex->Load("Sprites/ball.png");
 	ball = App->physics->CreateCircle(100, 100, 6);
+
+	yellowsticker.image = App->tex->Load("Sprites/yellowsticker.png");
+	greysticker.image = App->tex->Load("Sprites/greysticker.png");
+	bluesticker.image = App->tex->Load("Sprites/bluesticker.png");
 
 	return true;
 }
@@ -51,6 +60,18 @@ bool PinballBoard::Draw()
 	int ball_x, ball_y;
 	ball->GetPosition(ball_x, ball_y);
 	App->render->Blit(ball_sprite.image, ball_x, ball_y, &ball_sprite.rect, 1.0f, ball->GetRotation());
+
+	App->render->Blit(yellowsticker.image, 371, 89, &yellowsticker.rect);  // yellow stickers
+	App->render->Blit(yellowsticker.image, 401, 126, &yellowsticker.rect);
+	App->render->Blit(yellowsticker.image, 414, 84, &yellowsticker.rect);
+
+	App->render->Blit(greysticker.image, 144, 88, &greysticker.rect);  // grey sticker
+
+	App->render->Blit(bluesticker.image, 274, 315, &bluesticker.rect); //blue stickers
+	App->render->Blit(bluesticker.image, 256, 279, &bluesticker.rect);
+	App->render->Blit(bluesticker.image, 250, 243, &bluesticker.rect);
+	App->render->Blit(bluesticker.image, 304, 282, &bluesticker.rect);
+	App->render->Blit(bluesticker.image, 306, 244, &bluesticker.rect);
 
 	App->render->Blit(walls.image, 0, 0, &walls.rect);
 
@@ -363,5 +384,21 @@ bool PinballBoard::CreateBoardPhyisics()
 	size = 16;
 	App->physics->CreateStaticChain(0, 0, right_leftseparator, size);
 
+	return true;
+}
+
+bool PinballBoard::CreateStickersCollisions()
+{
+	App->physics->CreateStaticCircle(386, 102, 10); //yellow stickers
+	App->physics->CreateStaticCircle(429, 97, 10);
+	App->physics->CreateStaticCircle(416, 139, 10);
+
+	App->physics->CreateStaticCircle(158, 102, 10); // grey sticker
+
+	App->physics->CreateStaticCircle(323, 259, 10); //blue stickers
+	App->physics->CreateStaticCircle(267, 258, 10);
+	App->physics->CreateStaticCircle(273, 294, 10);
+	App->physics->CreateStaticCircle(291, 330, 10);
+	App->physics->CreateStaticCircle(321, 297, 10);
 	return true;
 }

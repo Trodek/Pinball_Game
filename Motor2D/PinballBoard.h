@@ -27,6 +27,7 @@ public:
 
 private:
 	bool CreateBoardPhyisics();
+	bool CreateStickersCollisions();
 
 private:
 
@@ -37,6 +38,10 @@ private:
 
 	PhysBody*	ball;
 	Sprite		ball_sprite;
+
+	Sprite		yellowsticker;
+	Sprite		bluesticker;
+	Sprite		greysticker;
 };
 
 #endif // !_PinballBoard_
