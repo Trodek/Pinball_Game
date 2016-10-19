@@ -59,6 +59,9 @@ private:
 	Sprite		left_kicker;
 	Sprite		right_kicker;
 
+	Sprite		right_puncher;
+	Sprite		left_puncher;
+
 };
 
 #endif // !_PinballBoard_

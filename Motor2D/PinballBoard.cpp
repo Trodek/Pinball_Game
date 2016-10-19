@@ -17,7 +17,8 @@ PinballBoard::PinballBoard() : j1Module()
 	yellowsticker.rect = { 0,0,30,31 };
 	bluesticker.rect = { 0,0,37,34 };
 	greysticker.rect = { 0,0,28,28 };
-	left_kicker.rect = { 0,0,54,26 };
+	right_kicker.rect  = left_kicker.rect = { 0,0,54,26 };
+	right_puncher.rect = { 0,0,67,79 };
 
 }
 
@@ -52,6 +53,9 @@ bool PinballBoard::Start()
 	bluesticker.image = App->tex->Load("Sprites/bluesticker.png");
 
 	left_kicker.image = App->tex->Load("Sprites/left_kicker.png");
+	right_kicker.image = App->tex->Load("Sprites/right_kicker.png");
+
+	right_puncher.image = App->tex->Load("Sprites/right_puncher.png");
 
 	return true;
 }
@@ -548,8 +552,8 @@ bool PinballBoard::CreateBoardPhyisics()
 		
 		int left_bot[26] = {
 			73, 378,
-			75, 376,
-			78, 377,
+			75, 377,
+			78, 376,
 			80, 379,
 			80, 430,
 			82, 434,
@@ -566,7 +570,7 @@ bool PinballBoard::CreateBoardPhyisics()
 
 		int right_bot[24] = {
 			511, 379,
-			513, 376,
+			513, 377,
 			516, 376,
 			518, 379,
 			518, 435,
@@ -755,8 +759,8 @@ bool PinballBoard::CreateKickers()
 	int left_kicker_points[8] = {
 		8, 8,
 		8, 17,
-		48, 17,
-		48, 14
+		52, 17,
+		52, 14
 	};
 	int size = 8;
 	kick.body = App->physics->CreatePolygon(128, 460, left_kicker_points, size, BOARD, BALL);
@@ -774,14 +778,24 @@ bool PinballBoard::CreateKickers()
 	left_kickers.add(kick);
 
 	int right_kicker_points[8] = {
-		45, 8,
-		45, 17,
+		50, 8,
+		50, 17,
 		6, 17,
 		6, 14
 	};
-	kick.anchor = App->physics->CreateStaticCircle(228, 464, 5, BOARD, BALL);		//left mid kicker
+	kick.anchor = App->physics->CreateStaticCircle(228, 464, 5, BOARD, BALL);		//left bottom right kicker
 	kick.body = App->physics->CreatePolygon(228, 464, right_kicker_points, size, BOARD, BALL);
-	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 46,13 }, true, 25, -25, true, -30, 40);
+	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 50,13 }, true, 25, -25, true, -30, 40);
+	right_kickers.add(kick);
+
+	kick.anchor = App->physics->CreateStaticCircle(540, 282, 5, BOARD, BALL);		//right mid kicker
+	kick.body = App->physics->CreatePolygon(540, 282, right_kicker_points, size, BOARD, BALL);
+	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 50,13 }, true, 5, -45, true, -30, 40);
+	right_kickers.add(kick);
+
+	kick.anchor = App->physics->CreateStaticCircle(461, 462, 5, BOARD, BALL);		//right bottom right kicker
+	kick.body = App->physics->CreatePolygon(461, 462, right_kicker_points, size, BOARD, BALL);
+	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 50,13 }, true, 25, -25, true, -30, 40);
 	right_kickers.add(kick);
 
 	return false;

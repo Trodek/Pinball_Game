@@ -84,6 +84,22 @@ bool j1Scene::Update(float dt)
 			left_kick = left_kick->next;
 		}
 	}
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN) {
+		p2List_item<kicker_info>* right_kick = App->pinball->right_kickers.start;
+		while (right_kick != NULL) {
+			right_kick->data.joint->SetMotorSpeed(motor_speed);
+
+			right_kick = right_kick->next;
+		}
+	}
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
+		p2List_item<kicker_info>* right_kick = App->pinball->right_kickers.start;
+		while (right_kick != NULL) {
+			right_kick->data.joint->SetMotorSpeed(-motor_speed);
+
+			right_kick = right_kick->next;
+		}
+	}
 
 	App->pinball->Draw();
 	return true;
