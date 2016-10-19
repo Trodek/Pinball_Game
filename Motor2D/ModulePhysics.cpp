@@ -60,7 +60,7 @@ bool ModulePhysics::PreUpdate()
 	return true;
 }
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
@@ -73,6 +73,8 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
 
 	b->CreateFixture(&fixture);
 
@@ -84,7 +86,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius)
+PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -97,6 +99,9 @@ PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius)
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
+
 
 	b->CreateFixture(&fixture);
 
@@ -108,7 +113,7 @@ PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius)
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
@@ -121,6 +126,8 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 	b2FixtureDef fixture;
 	fixture.shape = &box;
 	fixture.density = 1.0f;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
 
 	b->CreateFixture(&fixture);
 
@@ -133,7 +140,7 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int height)
+PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int height, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -146,6 +153,8 @@ PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int hei
 	b2FixtureDef fixture;
 	fixture.shape = &box;
 	fixture.density = 1.0f;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
 
 	b->CreateFixture(&fixture);
 
@@ -158,7 +167,7 @@ PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int hei
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height)
+PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -173,6 +182,8 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	fixture.shape = &box;
 	fixture.density = 1.0f;
 	fixture.isSensor = true;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
 
 	b->CreateFixture(&fixture);
 
@@ -185,7 +196,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
+PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
@@ -206,6 +217,8 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
 
 	b->CreateFixture(&fixture);
 
@@ -219,7 +232,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size)
+PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -240,6 +253,8 @@ PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
 
 	b->CreateFixture(&fixture);
 

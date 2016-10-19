@@ -43,7 +43,7 @@ bool PinballBoard::Start()
 	background.image = App->tex->Load("Sprites/background.png");
 
 	ball_sprite.image = App->tex->Load("Sprites/ball.png");
-	ball = App->physics->CreateCircle(100, 100, 6);
+	ball = App->physics->CreateCircle(100, 100, 6, BALL, BOARD);
 
 	yellowsticker.image = App->tex->Load("Sprites/yellowsticker.png");
 	greysticker.image = App->tex->Load("Sprites/greysticker.png");
@@ -617,6 +617,20 @@ bool PinballBoard::CreateBoardPhyisics()
 
 	}
 
+	int launcher_tub[20] = {
+		281, 160,
+		281, 490,
+		307, 490,
+		307, 424,
+		307, 201,
+		307, 160,
+		309, 160,
+		309, 493,
+		279, 493,
+		279, 160
+	};
+	size = 20;
+	App->physics->CreateStaticChain(0, 0, launcher_tub, size,LAUNCH,LAUNCH);
 	return true;
 }
 

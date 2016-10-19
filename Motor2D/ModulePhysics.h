@@ -12,6 +12,10 @@
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
+enum Layers {
+	LAUNCH = 1, BOARD, TOP, KICKERS, BALL
+};
+
 // Small class to return to other modules to track position and rotation of physics bodies
 class PhysBody
 {
@@ -42,13 +46,13 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
-	PhysBody* CreateCircle(int x, int y, int radius);
-	PhysBody* CreateStaticCircle(int x, int y, int radius);
-	PhysBody* CreateRectangle(int x, int y, int width, int height);
-	PhysBody* CreateStaticRectangle(int x, int y, int width, int height);
-	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
-	PhysBody* CreateChain(int x, int y, int* points, int size);
-	PhysBody* CreateStaticChain(int x, int y, int* points, int size);
+	PhysBody* CreateCircle(int x, int y, int radius, int cat = BOARD, int mask = BALL);
+	PhysBody* CreateStaticCircle(int x, int y, int radius, int cat = BOARD, int mask = BALL);
+	PhysBody* CreateRectangle(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
+	PhysBody* CreateStaticRectangle(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
+	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
+	PhysBody* CreateChain(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
+	PhysBody* CreateStaticChain(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
 
 	void SetGround(b2Body* body) {
 		ground = body;
