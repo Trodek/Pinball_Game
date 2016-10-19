@@ -35,6 +35,7 @@ public:
 public:
 
 	p2List<kicker_info> left_kickers;
+	p2List<kicker_info> right_kickers;
 
 private:
 	bool CreateBoardPhyisics();
@@ -56,6 +57,7 @@ private:
 	Sprite		greysticker;
 
 	Sprite		left_kicker;
+	Sprite		right_kicker;
 
 };
 

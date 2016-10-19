@@ -70,7 +70,7 @@ bool PinballBoard::Draw()
 	{
 		int kick_x, kick_y;
 		lkick->data.anchor->GetPosition(kick_x, kick_y);
-		App->render->Blit(left_kicker.image, kick_x, kick_y - left_kicker.rect.h / 4, &left_kicker.rect, 1.0f, lkick->data.body->GetRotation(), 6, left_kicker.rect.h / 2);
+		App->render->Blit(left_kicker.image, kick_x, kick_y - left_kicker.rect.h / 4, &left_kicker.rect, 1.0f, lkick->data.body->GetRotation(), 9, left_kicker.rect.h / 2);
 
 		lkick = lkick->next;
 	}
@@ -772,5 +772,17 @@ bool PinballBoard::CreateKickers()
 	kick.body = App->physics->CreatePolygon(358, 462, left_kicker_points, size, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 8,13 }, true, 25, -25, true, 30, 40);
 	left_kickers.add(kick);
+
+	int right_kicker_points[8] = {
+		45, 8,
+		45, 17,
+		6, 17,
+		6, 14
+	};
+	kick.anchor = App->physics->CreateStaticCircle(228, 464, 5, BOARD, BALL);		//left mid kicker
+	kick.body = App->physics->CreatePolygon(228, 464, right_kicker_points, size, BOARD, BALL);
+	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 46,13 }, true, 25, -25, true, -30, 40);
+	right_kickers.add(kick);
+
 	return false;
 }
