@@ -5,6 +5,13 @@
 
 struct Sprite;
 class PhysBody;
+class b2RevoluteJoint;
+
+struct kicker_info {
+	PhysBody* anchor;
+	PhysBody* body;
+	b2RevoluteJoint* joint;
+};
 
 class PinballBoard : public j1Module {
 public:
@@ -25,9 +32,14 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+public:
+
+	p2List<kicker_info> left_kickers;
+
 private:
 	bool CreateBoardPhyisics();
 	bool CreateStickersCollisions();
+	bool CreateKickers();
 
 private:
 
@@ -42,6 +54,9 @@ private:
 	Sprite		yellowsticker;
 	Sprite		bluesticker;
 	Sprite		greysticker;
+
+	Sprite		left_kicker;
+
 };
 
 #endif // !_PinballBoard_

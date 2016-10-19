@@ -1,5 +1,6 @@
 #pragma once
 #include "j1Module.h"
+#include "p2Point.h"
 //#include "Globals.h"
 #include "Box2D/Box2D/Box2D.h"
 
@@ -50,9 +51,13 @@ public:
 	PhysBody* CreateStaticCircle(int x, int y, int radius, int cat = BOARD, int mask = BALL);
 	PhysBody* CreateRectangle(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
 	PhysBody* CreateStaticRectangle(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
+	PhysBody* CreatePolygon(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
+	PhysBody* CreateStaticPolygon(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
 	PhysBody* CreateChain(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
 	PhysBody* CreateStaticChain(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
+
+	b2RevoluteJoint* CreateRevoluteJoint(PhysBody* anchor, PhysBody* body, iPoint anchor_offset, iPoint body_offset, bool enable_limit, float max_angle, float min_angle, bool enable_motor, int motor_speed, int max_torque);
 
 	void SetGround(b2Body* body) {
 		ground = body;

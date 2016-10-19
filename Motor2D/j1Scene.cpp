@@ -26,7 +26,7 @@ bool j1Scene::Awake(pugi::xml_node& node)
 	LOG("Loading Scene");
 	bool ret = true;
 
-	
+	motor_speed = node.child("motor_speed").attribute("value").as_int();
 
 	return ret;
 }
@@ -66,9 +66,25 @@ bool j1Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 		int x, y;
 		App->input->GetMousePosition(x, y);
-		App->physics->CreateCircle(x, y, 6);
+		App->physics->CreateCircle(x, y, 6, BALL, BOARD);
 	}
-	
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN) {
+		p2List_item<kicker_info>* left_kick = App->pinball->left_kickers.start;
+		while (left_kick != NULL) {
+			left_kick->data.joint->SetMotorSpeed(-motor_speed);
+
+			left_kick = left_kick->next;
+		}
+	}
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
+		p2List_item<kicker_info>* left_kick = App->pinball->left_kickers.start;
+		while (left_kick != NULL) {
+			left_kick->data.joint->SetMotorSpeed(motor_speed);
+
+			left_kick = left_kick->next;
+		}
+	}
+
 	App->pinball->Draw();
 	return true;
 }

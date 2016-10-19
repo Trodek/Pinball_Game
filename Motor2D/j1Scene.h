@@ -30,7 +30,11 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+public:
+	int motor_speed;
+
 private:
+
 
 };
 

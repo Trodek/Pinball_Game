@@ -167,6 +167,72 @@ PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int hei
 	return pbody;
 }
 
+PhysBody * ModulePhysics::CreatePolygon(int x, int y, int* points, int size, int cat, int mask)
+{
+	b2BodyDef body;
+	body.type = b2_dynamicBody;
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body);
+	b2PolygonShape box;
+	b2Vec2* p = new b2Vec2[size / 2];
+
+	for (uint i = 0; i < size / 2; ++i)
+	{
+		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
+		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
+	}
+	box.Set(p, size / 2);
+
+	b2FixtureDef fixture;
+	fixture.shape = &box;
+	fixture.density = 1.0f;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
+
+	b->CreateFixture(&fixture);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->SetUserData(pbody);
+	pbody->height = pbody->width = 0;
+
+	return pbody;
+}
+
+PhysBody * ModulePhysics::CreateStaticPolygon(int x, int y, int* points, int size, int cat, int mask)
+{
+	b2BodyDef body;
+	body.type = b2_staticBody;
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body);
+	b2PolygonShape box;
+	b2Vec2* p = new b2Vec2[size / 2];
+
+	for (uint i = 0; i < size / 2; ++i)
+	{
+		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
+		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
+	}
+	box.Set(p, size / 2);
+
+	b2FixtureDef fixture;
+	fixture.shape = &box;
+	fixture.density = 1.0f;
+	fixture.filter.categoryBits = cat;
+	fixture.filter.maskBits = mask;
+
+	b->CreateFixture(&fixture);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->SetUserData(pbody);
+	pbody->height = pbody->width = 0;
+
+	return pbody;
+}
+
 PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height, int cat, int mask)
 {
 	b2BodyDef body;
@@ -268,6 +334,33 @@ PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size
 	return pbody;
 }
 
+b2RevoluteJoint* ModulePhysics::CreateRevoluteJoint(PhysBody * anchor, PhysBody * body, iPoint anchor_offset, iPoint body_offset, bool enable_limit, float max_angle, float min_angle, bool enable_motor, int motor_speed, int max_torque)
+{
+	b2RevoluteJointDef rev_joint;
+	rev_joint.bodyA = anchor->body;
+	rev_joint.bodyB = body->body;
+	rev_joint.collideConnected = false;
+	rev_joint.type = e_revoluteJoint;
+	rev_joint.enableLimit = enable_limit;
+	rev_joint.enableMotor = enable_motor;
+	b2Vec2 anchor_center_diff(PIXEL_TO_METERS(anchor_offset.x), PIXEL_TO_METERS(anchor_offset.y));
+	rev_joint.localAnchorA = anchor_center_diff;
+	b2Vec2 body_center_diff(PIXEL_TO_METERS(body_offset.x), PIXEL_TO_METERS(body_offset.y));
+	rev_joint.localAnchorB = body_center_diff;
+	if (enable_limit) {
+		rev_joint.lowerAngle = DEGTORAD*min_angle;
+		rev_joint.upperAngle = DEGTORAD*max_angle;
+	}
+	if (enable_motor) {
+		rev_joint.motorSpeed = motor_speed;
+		rev_joint.maxMotorTorque = max_torque;
+	}
+
+	b2RevoluteJoint* rev = (b2RevoluteJoint*)world->CreateJoint(&rev_joint);
+
+	return rev;
+}
+
 // 
 bool ModulePhysics::PostUpdate()
 {
@@ -275,7 +368,7 @@ bool ModulePhysics::PostUpdate()
 		debug = !debug;
 
 	if(!debug)
-		return false;
+		return true;
 
 	// Bonus code: this will iterate all objects in the world and draw the circles
 	// You need to provide your own macro to translate meters to pixels

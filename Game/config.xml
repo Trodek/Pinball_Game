@@ -23,7 +23,7 @@
   </file_system>
   
   <scene>
-   
+    <motor_speed value="25"/>
   </scene>
 
 </config>
