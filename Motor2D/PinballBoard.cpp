@@ -24,7 +24,9 @@ PinballBoard::PinballBoard() : j1Module()
 
 // Destructor
 PinballBoard::~PinballBoard()
-{}
+{
+
+}
 
 // Called before render is available
 bool PinballBoard::Awake(pugi::xml_node& node)
@@ -77,6 +79,16 @@ bool PinballBoard::Draw()
 		App->render->Blit(left_kicker.image, kick_x, kick_y - left_kicker.rect.h / 4, &left_kicker.rect, 1.0f, lkick->data.body->GetRotation(), 9, left_kicker.rect.h / 2);
 
 		lkick = lkick->next;
+	}
+
+	p2List_item<kicker_info>* rkick = right_kickers.start;
+	while (rkick != NULL)
+	{
+		int kick_x, kick_y;
+		rkick->data.anchor->GetPosition(kick_x, kick_y);
+		App->render->Blit(right_kicker.image, kick_x - 40, kick_y - 12, &right_kicker.rect, 1.0f, rkick->data.body->GetRotation(), 53, right_kicker.rect.h / 2);
+
+		rkick = rkick->next;
 	}
 
 	App->render->Blit(yellowsticker.image, 371, 89, &yellowsticker.rect);  // yellow stickers
@@ -546,10 +558,7 @@ bool PinballBoard::CreateBoardPhyisics()
 	}				
 
 	//Angles that are next to the kickers
-	{
-		
-		
-		
+	{	
 		int left_bot[26] = {
 			73, 378,
 			75, 377,
@@ -755,7 +764,7 @@ bool PinballBoard::CreateStickersCollisions()
 bool PinballBoard::CreateKickers()
 {
 	kicker_info kick;
-	kick.anchor = App->physics->CreateStaticCircle(128, 460, 5, BOARD, BALL);   // left bottom left kicker
+	kick.anchor = App->physics->CreateStaticCircle(128, 462, 5, BOARD, BALL);   // left bottom left kicker
 	int left_kicker_points[8] = {
 		8, 8,
 		8, 17,
@@ -763,7 +772,7 @@ bool PinballBoard::CreateKickers()
 		52, 14
 	};
 	int size = 8;
-	kick.body = App->physics->CreatePolygon(128, 460, left_kicker_points, size, BOARD, BALL);
+	kick.body = App->physics->CreatePolygon(128, 462, left_kicker_points, size, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 8,13 }, true, 25, -25, true, 30, 40);
 	left_kickers.add(kick);
 
