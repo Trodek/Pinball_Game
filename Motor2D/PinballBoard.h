@@ -32,6 +32,8 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+
 public:
 
 	p2List<kicker_info> left_kickers;
@@ -41,9 +43,12 @@ private:
 	bool CreateBoardPhyisics();
 	bool CreateStickersCollisions();
 	bool CreateKickers();
+	bool CreateTrigers();
 
 private:
 
+	iPoint offset;
+	
 	p2SString	default_map;
 
 	Sprite		walls;
@@ -61,6 +66,8 @@ private:
 
 	Sprite		right_puncher;
 	Sprite		left_puncher;
+
+	PhysBody*	launch_triger;
 
 };
 

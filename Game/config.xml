@@ -11,7 +11,7 @@
   </renderer>
 
   <window>
-    <resolution width="590" height="527" scale="1"/>
+    <resolution width="1180" height="1054" scale="2"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
@@ -25,5 +25,9 @@
   <scene>
     <motor_speed value="25"/>
   </scene>
+
+  <pinball>
+    <offset x="50" y="0"/>
+  </pinball>
 
 </config>

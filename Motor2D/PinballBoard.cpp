@@ -11,7 +11,7 @@
 
 PinballBoard::PinballBoard() : j1Module()
 {
-	name.create("scene");
+	name.create("pinball");
 	background.rect = walls.rect = { 0,0,590,500 };
 	ball_sprite.rect = { 0,0,13,13 };
 	yellowsticker.rect = { 0,0,30,31 };
@@ -34,6 +34,9 @@ bool PinballBoard::Awake(pugi::xml_node& node)
 	LOG("Loading Pinball Board");
 	bool ret = true;
 
+	offset.x = node.child("offset").attribute("x").as_int(0);
+	offset.y = node.child("offset").attribute("y").as_int(0);
+
 	return ret;
 }
 
@@ -43,12 +46,13 @@ bool PinballBoard::Start()
 	CreateBoardPhyisics();
 	CreateStickersCollisions();
 	CreateKickers();
+	CreateTrigers();
 
 	walls.image = App->tex->Load("Sprites/Walls.png");
 	background.image = App->tex->Load("Sprites/background.png");
 
 	ball_sprite.image = App->tex->Load("Sprites/ball.png");
-	ball = App->physics->CreateCircle(100, 100, 6, BALL, BOARD);
+	ball = App->physics->CreateCircle(300, 100, 6, BALL, BOARD);
 
 	yellowsticker.image = App->tex->Load("Sprites/yellowsticker.png");
 	greysticker.image = App->tex->Load("Sprites/greysticker.png");
@@ -114,6 +118,18 @@ bool PinballBoard::CleanUp()
 	LOG("Freeing scene");
 
 	return true;
+}
+
+void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
+{
+	if (bodyA == ball) {
+		if (bodyB == launch_triger) {
+			b2Filter fil;
+			fil.categoryBits = BALL;
+			fil.maskBits = BOARD;
+			ball->body->GetFixtureList()->SetFilterData(fil);
+		}
+	}
 }
 
 bool PinballBoard::CreateBoardPhyisics()
@@ -808,4 +824,11 @@ bool PinballBoard::CreateKickers()
 	right_kickers.add(kick);
 
 	return false;
+}
+
+bool PinballBoard::CreateTrigers()
+{
+	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 1, LAUNCH);
+	launch_triger->listener = App->pinball;
+	return true;
 }

@@ -66,7 +66,7 @@ bool j1Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 		int x, y;
 		App->input->GetMousePosition(x, y);
-		App->physics->CreateCircle(x, y, 6, BALL, BOARD);
+		App->physics->CreateCircle(x, y, 6, BALL, LAUNCH);
 	}
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN) {
 		p2List_item<kicker_info>* left_kick = App->pinball->left_kickers.start;
