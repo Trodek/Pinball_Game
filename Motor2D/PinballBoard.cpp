@@ -19,6 +19,7 @@ PinballBoard::PinballBoard() : j1Module()
 	greysticker.rect = { 0,0,28,28 };
 	right_kicker.rect  = left_kicker.rect = { 0,0,54,26 };
 	right_puncher.rect = { 0,0,67,79 };
+	x_sprite.rect = { 0,0,211,167 };
 
 }
 
@@ -62,6 +63,8 @@ bool PinballBoard::Start()
 	right_kicker.image = App->tex->Load("Sprites/right_kicker.png");
 
 	right_puncher.image = App->tex->Load("Sprites/right_puncher.png");
+
+	x_sprite.image = App->tex->Load("Sprites/midle_x.png");
 
 	return true;
 }
@@ -116,6 +119,14 @@ bool PinballBoard::Draw()
 bool PinballBoard::CleanUp()
 {
 	LOG("Freeing scene");
+	App->tex->UnLoad(walls.image);
+	App->tex->UnLoad(background.image);
+	App->tex->UnLoad(left_kicker.image);
+	App->tex->UnLoad(right_kicker.image);
+	App->tex->UnLoad(greysticker.image);
+	App->tex->UnLoad(bluesticker.image);
+	App->tex->UnLoad(yellowsticker.image);
+	App->tex->UnLoad(right_puncher.image);
 
 	return true;
 }
@@ -123,6 +134,22 @@ bool PinballBoard::CleanUp()
 void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 {
 	if (bodyA == launch_triger) {
+		if (bodyB == ball) {
+			b2Filter fil;
+			fil.categoryBits = BALL;
+			fil.maskBits = BOARD;
+			ball->body->GetFixtureList()->SetFilterData(fil);
+		}
+	}
+	if (bodyA == x_lefttop_toTOP || bodyA == x_righttop_toTOP) {
+		if (bodyB == ball) {
+			b2Filter fil;
+			fil.categoryBits = BALL;
+			fil.maskBits = TOP;
+			ball->body->GetFixtureList()->SetFilterData(fil);
+		}
+	}
+	if (bodyA == x_lefttop_toBOARD || bodyA == x_righttop_toBOARD) {
 		if (bodyB == ball) {
 			b2Filter fil;
 			fil.categoryBits = BALL;
@@ -757,7 +784,7 @@ bool PinballBoard::CreateBoardPhyisics()
 		279, 160
 	};
 	size = 20;
-	App->physics->CreateStaticChain(0, 0, launcher_tub, size,LAUNCH,LAUNCH);
+	App->physics->CreateStaticChain(0, 0, launcher_tub, size, LAUNCH, BALL);
 
 	// Middle X
 	{
@@ -820,7 +847,7 @@ bool PinballBoard::CreateBoardPhyisics()
 			9, 3
 		};
 		size = 112;
-		App->physics->CreateStaticChain(0, 0, midle_x, size, TOP);
+		App->physics->CreateStaticChain(190, 173, midle_x, size, TOP, BALL);
 	}
 	return true;
 }
@@ -894,5 +921,13 @@ bool PinballBoard::CreateTrigers()
 {
 	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 1, LAUNCH);
 	launch_triger->listener = App->pinball;
+	x_lefttop_toTOP = App->physics->CreateRectangleSensor(212, 189, 1, 19);
+	x_lefttop_toTOP->listener = App->pinball;
+	x_lefttop_toBOARD = App->physics->CreateRectangleSensor(210, 189, 1, 19, TOP);
+	x_lefttop_toBOARD->listener = App->pinball;
+	x_righttop_toTOP = App->physics->CreateRectangleSensor(376, 189, 1, 19);
+	x_righttop_toTOP->listener = App->pinball;
+	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 1, 19, TOP);
+	x_righttop_toBOARD->listener = App->pinball;
 	return true;
 }

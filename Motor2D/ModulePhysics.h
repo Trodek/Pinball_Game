@@ -14,7 +14,7 @@
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
 enum Layers {
-	LAUNCH = 1, BOARD, TOP, KICKERS, BALL
+	LAUNCH = 1, BOARD, KICKERS = 4, BALL, TOP = 8,  //DONT KNOW WHY WITH OTHER NUMBERS DONT WORK
 };
 
 // Small class to return to other modules to track position and rotation of physics bodies

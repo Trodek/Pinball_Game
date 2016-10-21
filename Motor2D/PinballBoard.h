@@ -67,7 +67,18 @@ private:
 	Sprite		right_puncher;
 	Sprite		left_puncher;
 
+	Sprite		x_sprite;
+
 	PhysBody*	launch_triger;
+
+	PhysBody*	x_righttop_toTOP;
+	PhysBody*	x_lefttop_toTOP;
+	PhysBody*	x_leftbot_toTOP;
+	PhysBody*	x_rightbot_toTOP;
+	PhysBody*	x_righttop_toBOARD;
+	PhysBody*	x_lefttop_toBOARD;
+	PhysBody*	x_leftbot_toBOARD;
+	PhysBody*	x_rightbot_toBOARD;
 
 };
 
