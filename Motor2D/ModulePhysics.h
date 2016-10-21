@@ -49,13 +49,13 @@ public:
 
 	PhysBody* CreateCircle(int x, int y, int radius, int cat = BOARD, int mask = BALL);
 	PhysBody* CreateStaticCircle(int x, int y, int radius, int cat = BOARD, int mask = BALL);
-	PhysBody* CreateRectangle(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
-	PhysBody* CreateStaticRectangle(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
-	PhysBody* CreatePolygon(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
-	PhysBody* CreateStaticPolygon(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
-	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, int cat = BOARD, int mask = BALL);
-	PhysBody* CreateChain(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
-	PhysBody* CreateStaticChain(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL);
+	PhysBody* CreateRectangle(int x, int y, int width, int height, int cat = BOARD, int mask = BALL, int angle = 0);
+	PhysBody* CreateStaticRectangle(int x, int y, int width, int height, int cat = BOARD, int mask = BALL, int angle = 0);
+	PhysBody* CreatePolygon(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL, int angle = 0);
+	PhysBody* CreateStaticPolygon(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL, int angle = 0);
+	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, int cat = BOARD, int mask = BALL, int angle = 0);
+	PhysBody* CreateChain(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL, int angle = 0);
+	PhysBody* CreateStaticChain(int x, int y, int* points, int size, int cat = BOARD, int mask = BALL, int angle = 0);
 
 	b2RevoluteJoint* CreateRevoluteJoint(PhysBody* anchor, PhysBody* body, iPoint anchor_offset, iPoint body_offset, bool enable_limit, float max_angle, float min_angle, bool enable_motor, int motor_speed, int max_torque);
 

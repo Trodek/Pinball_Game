@@ -76,8 +76,31 @@ bool PinballBoard::Draw()
 
 	int ball_x, ball_y;
 	ball->GetPosition(ball_x, ball_y);
+	if (ball->body->GetFixtureList()->GetFilterData().maskBits == TOP) {
+		App->render->Blit(x_sprite.image, 190, 173, &x_sprite.rect);
+
+		App->render->Blit(bluesticker.image, 274, 315, &bluesticker.rect); //blue stickers
+		App->render->Blit(bluesticker.image, 256, 279, &bluesticker.rect);
+		App->render->Blit(bluesticker.image, 250, 243, &bluesticker.rect);
+		App->render->Blit(bluesticker.image, 304, 282, &bluesticker.rect);
+		App->render->Blit(bluesticker.image, 306, 244, &bluesticker.rect);
+
+		App->render->Blit(walls.image, 0, 0, &walls.rect);
+	}
+
 	App->render->Blit(ball_sprite.image, ball_x, ball_y, &ball_sprite.rect, 1.0f, ball->GetRotation());
 
+	if (ball->body->GetFixtureList()->GetFilterData().maskBits != TOP) {
+		App->render->Blit(x_sprite.image, 190, 173, &x_sprite.rect);
+
+		App->render->Blit(bluesticker.image, 274, 315, &bluesticker.rect); //blue stickers
+		App->render->Blit(bluesticker.image, 256, 279, &bluesticker.rect);
+		App->render->Blit(bluesticker.image, 250, 243, &bluesticker.rect);
+		App->render->Blit(bluesticker.image, 304, 282, &bluesticker.rect);
+		App->render->Blit(bluesticker.image, 306, 244, &bluesticker.rect);
+
+		App->render->Blit(walls.image, 0, 0, &walls.rect);
+	}
 	p2List_item<kicker_info>* lkick = left_kickers.start;
 	while (lkick != NULL)
 	{
@@ -103,14 +126,6 @@ bool PinballBoard::Draw()
 	App->render->Blit(yellowsticker.image, 414, 84, &yellowsticker.rect);
 
 	App->render->Blit(greysticker.image, 144, 88, &greysticker.rect);  // grey sticker
-
-	App->render->Blit(bluesticker.image, 274, 315, &bluesticker.rect); //blue stickers
-	App->render->Blit(bluesticker.image, 256, 279, &bluesticker.rect);
-	App->render->Blit(bluesticker.image, 250, 243, &bluesticker.rect);
-	App->render->Blit(bluesticker.image, 304, 282, &bluesticker.rect);
-	App->render->Blit(bluesticker.image, 306, 244, &bluesticker.rect);
-
-	App->render->Blit(walls.image, 0, 0, &walls.rect);
 
 	return true;
 }
@@ -141,7 +156,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			ball->body->GetFixtureList()->SetFilterData(fil);
 		}
 	}
-	if (bodyA == x_lefttop_toTOP || bodyA == x_righttop_toTOP) {
+	if (bodyA == x_lefttop_toTOP || bodyA == x_righttop_toTOP || bodyA == x_rightbot_toTOP || bodyA == x_leftbot_toTOP) {
 		if (bodyB == ball) {
 			b2Filter fil;
 			fil.categoryBits = BALL;
@@ -149,7 +164,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			ball->body->GetFixtureList()->SetFilterData(fil);
 		}
 	}
-	if (bodyA == x_lefttop_toBOARD || bodyA == x_righttop_toBOARD) {
+	if (bodyA == x_lefttop_toBOARD || bodyA == x_righttop_toBOARD || bodyA == x_rightbot_toBOARD || bodyA == x_leftbot_toBOARD) {
 		if (bodyB == ball) {
 			b2Filter fil;
 			fil.categoryBits = BALL;
@@ -921,13 +936,26 @@ bool PinballBoard::CreateTrigers()
 {
 	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 1, LAUNCH);
 	launch_triger->listener = App->pinball;
-	x_lefttop_toTOP = App->physics->CreateRectangleSensor(212, 189, 1, 19);
+
+	x_lefttop_toTOP = App->physics->CreateRectangleSensor(212, 189, 1, 10);
 	x_lefttop_toTOP->listener = App->pinball;
-	x_lefttop_toBOARD = App->physics->CreateRectangleSensor(210, 189, 1, 19, TOP);
+	x_lefttop_toBOARD = App->physics->CreateRectangleSensor(210, 189, 1, 10, TOP);
 	x_lefttop_toBOARD->listener = App->pinball;
-	x_righttop_toTOP = App->physics->CreateRectangleSensor(376, 189, 1, 19);
+
+	x_righttop_toTOP = App->physics->CreateRectangleSensor(376, 189, 1, 10);
 	x_righttop_toTOP->listener = App->pinball;
-	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 1, 19, TOP);
+	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 1, 10, TOP);
 	x_righttop_toBOARD->listener = App->pinball;
+
+	x_rightbot_toTOP = App->physics->CreateRectangleSensor(370, 302, 1, 60, BOARD, BALL, 40);
+	x_rightbot_toTOP->listener = App->pinball;
+	x_rightbot_toBOARD = App->physics->CreateRectangleSensor(373, 305, 1, 60, TOP, BALL, 40);
+	x_rightbot_toBOARD->listener = App->pinball;
+
+	x_leftbot_toTOP = App->physics->CreateRectangleSensor(217, 302, 1, 60, BOARD, BALL, -40);
+	x_leftbot_toTOP->listener = App->pinball;
+	x_leftbot_toBOARD = App->physics->CreateRectangleSensor(215, 305, 1, 60, TOP, BALL, -40);
+	x_leftbot_toBOARD->listener = App->pinball;
+
 	return true;
 }

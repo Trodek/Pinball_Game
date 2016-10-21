@@ -113,11 +113,12 @@ PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius, int cat, 
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, int cat, int mask)
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.angle = DEGTORAD*angle;
 
 	b2Body* b = world->CreateBody(&body);
 	b2PolygonShape box;
@@ -140,11 +141,12 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, in
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int height, int cat, int mask)
+PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int height, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.angle = DEGTORAD*angle;
 
 	b2Body* b = world->CreateBody(&body);
 	b2PolygonShape box;
@@ -167,11 +169,12 @@ PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int hei
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreatePolygon(int x, int y, int* points, int size, int cat, int mask)
+PhysBody * ModulePhysics::CreatePolygon(int x, int y, int* points, int size, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.angle = DEGTORAD*angle;
 
 	b2Body* b = world->CreateBody(&body);
 	b2PolygonShape box;
@@ -200,11 +203,12 @@ PhysBody * ModulePhysics::CreatePolygon(int x, int y, int* points, int size, int
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticPolygon(int x, int y, int* points, int size, int cat, int mask)
+PhysBody * ModulePhysics::CreateStaticPolygon(int x, int y, int* points, int size, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.angle = DEGTORAD*angle;
 
 	b2Body* b = world->CreateBody(&body);
 	b2PolygonShape box;
@@ -233,11 +237,12 @@ PhysBody * ModulePhysics::CreateStaticPolygon(int x, int y, int* points, int siz
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height, int cat, int mask)
+PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.angle = DEGTORAD*angle;
 
 	b2Body* b = world->CreateBody(&body);
 
@@ -262,11 +267,12 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, int cat, int mask)
+PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.angle = DEGTORAD*angle;
 
 	b2Body* b = world->CreateBody(&body);
 
@@ -298,11 +304,12 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, int ca
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size, int cat, int mask)
+PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.angle = DEGTORAD*angle;
 
 	b2Body* b = world->CreateBody(&body);
 
@@ -334,7 +341,8 @@ PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size
 	return pbody;
 }
 
-b2RevoluteJoint* ModulePhysics::CreateRevoluteJoint(PhysBody * anchor, PhysBody * body, iPoint anchor_offset, iPoint body_offset, bool enable_limit, float max_angle, float min_angle, bool enable_motor, int motor_speed, int max_torque)
+b2RevoluteJoint* ModulePhysics::CreateRevoluteJoint(PhysBody * anchor, PhysBody * body, iPoint anchor_offset, iPoint body_offset, bool enable_limit,
+													float max_angle, float min_angle, bool enable_motor, int motor_speed, int max_torque)
 {
 	b2RevoluteJointDef rev_joint;
 	rev_joint.bodyA = anchor->body;
