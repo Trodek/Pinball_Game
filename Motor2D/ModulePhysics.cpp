@@ -51,7 +51,7 @@ bool ModulePhysics::PreUpdate()
 		if(c->GetFixtureA()->IsSensor() && c->IsTouching())
 		{
 			PhysBody* pb1 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData();
-			PhysBody* pb2 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData();
+			PhysBody* pb2 = (PhysBody*)c->GetFixtureB()->GetBody()->GetUserData();
 			if(pb1 && pb2 && pb1->listener)
 				pb1->listener->OnCollision(pb1, pb2);
 		}

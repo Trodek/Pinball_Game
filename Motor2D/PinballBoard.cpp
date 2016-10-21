@@ -52,7 +52,7 @@ bool PinballBoard::Start()
 	background.image = App->tex->Load("Sprites/background.png");
 
 	ball_sprite.image = App->tex->Load("Sprites/ball.png");
-	ball = App->physics->CreateCircle(300, 100, 6, BALL, BOARD);
+	ball = App->physics->CreateCircle(300, 200, 6, BALL, LAUNCH);
 
 	yellowsticker.image = App->tex->Load("Sprites/yellowsticker.png");
 	greysticker.image = App->tex->Load("Sprites/greysticker.png");
@@ -122,8 +122,8 @@ bool PinballBoard::CleanUp()
 
 void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 {
-	if (bodyA == ball) {
-		if (bodyB == launch_triger) {
+	if (bodyA == launch_triger) {
+		if (bodyB == ball) {
 			b2Filter fil;
 			fil.categoryBits = BALL;
 			fil.maskBits = BOARD;
@@ -758,6 +758,70 @@ bool PinballBoard::CreateBoardPhyisics()
 	};
 	size = 20;
 	App->physics->CreateStaticChain(0, 0, launcher_tub, size,LAUNCH,LAUNCH);
+
+	// Middle X
+	{
+		int midle_x[112] = {
+			21, 6,
+			42, 6,
+			54, 7,
+			66, 9,
+			76, 11,
+			86, 14,
+			97, 18,
+			105, 21,
+			109, 21,
+			113, 18,
+			125, 14,
+			135, 11,
+			148, 8,
+			161, 6,
+			173, 5,
+			207, 5,
+			207, 30,
+			188, 25,
+			181, 26,
+			168, 31,
+			145, 42,
+			145, 44,
+			150, 47,
+			161, 58,
+			173, 69,
+			185, 81,
+			193, 91,
+			205, 108,
+			233, 113,
+			160, 187,
+			160, 154,
+			146, 128,
+			137, 113,
+			124, 94,
+			109, 75,
+			105, 74,
+			95, 85,
+			84, 100,
+			76, 112,
+			65, 130,
+			51, 158,
+			59, 188,
+			-7, 118,
+			16, 96,
+			25, 85,
+			38, 70,
+			51, 57,
+			67, 44,
+			67, 42,
+			62, 39,
+			50, 33,
+			40, 29,
+			29, 26,
+			22, 25,
+			9, 27,
+			9, 3
+		};
+		size = 112;
+		App->physics->CreateStaticChain(0, 0, midle_x, size, TOP);
+	}
 	return true;
 }
 
