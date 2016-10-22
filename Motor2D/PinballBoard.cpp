@@ -79,6 +79,8 @@ bool PinballBoard::Draw()
 	int ball_x, ball_y;
 	ball->GetPosition(ball_x, ball_y);
 	if (ball->body->GetFixtureList()->GetFilterData().maskBits == TOP) {
+		App->render->Blit(walls.image, 0, 0, &walls.rect);
+
 		App->render->Blit(x_sprite.image, 190, 173, &x_sprite.rect);
 
 		App->render->Blit(bluesticker.image, 274, 315, &bluesticker.rect); //blue stickers
@@ -86,13 +88,12 @@ bool PinballBoard::Draw()
 		App->render->Blit(bluesticker.image, 250, 243, &bluesticker.rect);
 		App->render->Blit(bluesticker.image, 304, 282, &bluesticker.rect);
 		App->render->Blit(bluesticker.image, 306, 244, &bluesticker.rect);
-
-		App->render->Blit(walls.image, 0, 0, &walls.rect);
 	}
 
 	App->render->Blit(ball_sprite.image, ball_x, ball_y, &ball_sprite.rect, 1.0f, ball->GetRotation());
 
 	if (ball->body->GetFixtureList()->GetFilterData().maskBits != TOP) {
+		App->render->Blit(walls.image, 0, 0, &walls.rect);
 		App->render->Blit(x_sprite.image, 190, 173, &x_sprite.rect);
 
 		App->render->Blit(bluesticker.image, 274, 315, &bluesticker.rect); //blue stickers
@@ -100,8 +101,6 @@ bool PinballBoard::Draw()
 		App->render->Blit(bluesticker.image, 250, 243, &bluesticker.rect);
 		App->render->Blit(bluesticker.image, 304, 282, &bluesticker.rect);
 		App->render->Blit(bluesticker.image, 306, 244, &bluesticker.rect);
-
-		App->render->Blit(walls.image, 0, 0, &walls.rect);
 	}
 	p2List_item<kicker_info>* lkick = left_kickers.start;
 	while (lkick != NULL)
