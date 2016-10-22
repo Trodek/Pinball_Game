@@ -64,6 +64,7 @@ private:
 
 	Sprite		left_kicker;
 	Sprite		right_kicker;
+	Sprite		top_kiker_sprite;
 
 	Sprite		right_puncher;
 	Sprite		left_puncher;

@@ -20,6 +20,7 @@ PinballBoard::PinballBoard() : j1Module()
 	right_kicker.rect  = left_kicker.rect = { 0,0,54,26 };
 	right_puncher.rect = { 0,0,67,79 };
 	x_sprite.rect = { 0,0,211,167 };
+	top_kiker_sprite.rect = { 0,0,26,54 };
 
 }
 
@@ -61,6 +62,7 @@ bool PinballBoard::Start()
 
 	left_kicker.image = App->tex->Load("Sprites/left_kicker.png");
 	right_kicker.image = App->tex->Load("Sprites/right_kicker.png");
+	top_kiker_sprite.image = App->tex->Load("Sprites/top_kicker.png");
 
 	right_puncher.image = App->tex->Load("Sprites/right_puncher.png");
 
@@ -121,6 +123,10 @@ bool PinballBoard::Draw()
 		rkick = rkick->next;
 	}
 
+	int kick_x, kick_y;
+	top_kicker.anchor->GetPosition(kick_x, kick_y);
+	App->render->Blit(top_kiker_sprite.image, kick_x, kick_y-4, &top_kiker_sprite.rect, 1.0f, top_kicker.body->GetRotation());
+
 	App->render->Blit(yellowsticker.image, 371, 89, &yellowsticker.rect);  // yellow stickers
 	App->render->Blit(yellowsticker.image, 401, 126, &yellowsticker.rect);
 	App->render->Blit(yellowsticker.image, 414, 84, &yellowsticker.rect);
@@ -134,6 +140,7 @@ bool PinballBoard::Draw()
 bool PinballBoard::CleanUp()
 {
 	LOG("Freeing scene");
+
 	App->tex->UnLoad(walls.image);
 	App->tex->UnLoad(background.image);
 	App->tex->UnLoad(left_kicker.image);
@@ -142,6 +149,7 @@ bool PinballBoard::CleanUp()
 	App->tex->UnLoad(bluesticker.image);
 	App->tex->UnLoad(yellowsticker.image);
 	App->tex->UnLoad(right_puncher.image);
+	App->tex->UnLoad(top_kiker_sprite.image);
 
 	return true;
 }
