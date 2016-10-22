@@ -172,6 +172,14 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			ball->body->GetFixtureList()->SetFilterData(fil);
 		}
 	}
+	if (bodyA == tolaunch_triger) {
+		if (bodyB == ball) {
+			b2Filter fil;
+			fil.categoryBits = BALL;
+			fil.maskBits = LAUNCH;
+			ball->body->GetFixtureList()->SetFilterData(fil);
+		}
+	}
 }
 
 bool PinballBoard::CreateBoardPhyisics()
@@ -929,6 +937,19 @@ bool PinballBoard::CreateKickers()
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 50,13 }, true, 25, -25, true, -30, 40);
 	right_kickers.add(kick);
 
+	int top_kicker_points[10] = {
+		9, 7,
+		12, 49,
+		14, 50,
+		15, 48,
+		17, 7
+	};
+	size = 10;
+	kick.anchor = App->physics->CreateStaticCircle(295, 98, 5, BOARD, BALL);
+	kick.body = App->physics->CreatePolygon(295, 98, top_kicker_points, size, BOARD, BALL);
+	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 13,8 }, true, 20, -20, true, 30, 40);
+	top_kicker = kick;
+
 	return false;
 }
 
@@ -936,6 +957,9 @@ bool PinballBoard::CreateTrigers()
 {
 	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 1, LAUNCH);
 	launch_triger->listener = App->pinball;
+
+	tolaunch_triger = App->physics->CreateRectangleSensor(295, 157, 32, 1);
+	tolaunch_triger->listener = App->pinball;
 
 	x_lefttop_toTOP = App->physics->CreateRectangleSensor(212, 189, 1, 10);
 	x_lefttop_toTOP->listener = App->pinball;

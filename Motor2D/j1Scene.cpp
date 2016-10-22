@@ -75,6 +75,7 @@ bool j1Scene::Update(float dt)
 
 			left_kick = left_kick->next;
 		}
+		App->pinball->top_kicker.joint->SetMotorSpeed(motor_speed);
 	}
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
 		p2List_item<kicker_info>* left_kick = App->pinball->left_kickers.start;
@@ -91,6 +92,7 @@ bool j1Scene::Update(float dt)
 
 			right_kick = right_kick->next;
 		}
+		App->pinball->top_kicker.joint->SetMotorSpeed(-motor_speed);
 	}
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
 		p2List_item<kicker_info>* right_kick = App->pinball->right_kickers.start;

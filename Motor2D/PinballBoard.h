@@ -38,6 +38,7 @@ public:
 
 	p2List<kicker_info> left_kickers;
 	p2List<kicker_info> right_kickers;
+	kicker_info top_kicker;
 
 private:
 	bool CreateBoardPhyisics();
@@ -70,6 +71,7 @@ private:
 	Sprite		x_sprite;
 
 	PhysBody*	launch_triger;
+	PhysBody*	tolaunch_triger;
 
 	PhysBody*	x_righttop_toTOP;
 	PhysBody*	x_lefttop_toTOP;
