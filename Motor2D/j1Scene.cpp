@@ -108,8 +108,8 @@ bool j1Scene::Update(float dt)
 		App->pinball->launcher.joint->SetMaxMotorForce(2);
 	}
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP) {
-		App->pinball->launcher.joint->SetMotorSpeed(-motor_speed);
-		App->pinball->launcher.joint->SetMaxMotorForce(50);
+		App->pinball->launcher.joint->SetMotorSpeed(-15);
+		App->pinball->launcher.joint->SetMaxMotorForce(20);
 	}
 
 	App->pinball->Draw();

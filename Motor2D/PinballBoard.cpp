@@ -957,9 +957,9 @@ bool PinballBoard::CreateKickers()
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 13,8 }, true, 20, -20, true, 30, 40);
 	top_kicker = kick;
 	
-	launcher.anchor = App->physics->CreateStaticRectangle(294, 486, 5, 5, LAUNCH);
+	launcher.anchor = App->physics->CreateStaticRectangle(294, 486, 5, 5);
 	launcher.body = App->physics->CreateRectangle(294, 480, 20, 2, LAUNCH);
-	launcher.joint = App->physics->CreatePrismaticJoint(launcher.anchor, launcher.body, { 0,0 }, { 0,0 }, true, 1, -30, true, -10, 50);
+	launcher.joint = App->physics->CreatePrismaticJoint(launcher.anchor, launcher.body, { 0,0 }, { 0,0 }, true, 1, -30, true, -10, 5);
 
 	return false;
 }
