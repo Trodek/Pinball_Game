@@ -956,6 +956,10 @@ bool PinballBoard::CreateKickers()
 	kick.body = App->physics->CreatePolygon(295, 98, top_kicker_points, size, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 13,8 }, true, 20, -20, true, 30, 40);
 	top_kicker = kick;
+	
+	launcher.anchor = App->physics->CreateStaticRectangle(294, 486, 5, 5, LAUNCH);
+	launcher.body = App->physics->CreateRectangle(294, 480, 20, 2, LAUNCH);
+	launcher.joint = App->physics->CreatePrismaticJoint(launcher.anchor, launcher.body, { 0,0 }, { 0,0 }, true, 1, -30, true, -10, 50);
 
 	return false;
 }
@@ -968,12 +972,12 @@ bool PinballBoard::CreateTrigers()
 	tolaunch_triger = App->physics->CreateRectangleSensor(295, 157, 32, 1);
 	tolaunch_triger->listener = App->pinball;
 
-	x_lefttop_toTOP = App->physics->CreateRectangleSensor(212, 189, 1, 10);
+	x_lefttop_toTOP = App->physics->CreateRectangleSensor(214, 189, 1, 10);
 	x_lefttop_toTOP->listener = App->pinball;
 	x_lefttop_toBOARD = App->physics->CreateRectangleSensor(210, 189, 1, 10, TOP);
 	x_lefttop_toBOARD->listener = App->pinball;
 
-	x_righttop_toTOP = App->physics->CreateRectangleSensor(376, 189, 1, 10);
+	x_righttop_toTOP = App->physics->CreateRectangleSensor(374, 189, 1, 10);
 	x_righttop_toTOP->listener = App->pinball;
 	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 1, 10, TOP);
 	x_righttop_toBOARD->listener = App->pinball;

@@ -6,11 +6,18 @@
 struct Sprite;
 class PhysBody;
 class b2RevoluteJoint;
+class b2PrismaticJoint;
 
 struct kicker_info {
 	PhysBody* anchor;
 	PhysBody* body;
 	b2RevoluteJoint* joint;
+};
+
+struct launcher_info {
+	PhysBody* anchor;
+	PhysBody* body;
+	b2PrismaticJoint* joint;
 };
 
 class PinballBoard : public j1Module {
@@ -39,6 +46,7 @@ public:
 	p2List<kicker_info> left_kickers;
 	p2List<kicker_info> right_kickers;
 	kicker_info top_kicker;
+	launcher_info	launcher;
 
 private:
 	bool CreateBoardPhyisics();

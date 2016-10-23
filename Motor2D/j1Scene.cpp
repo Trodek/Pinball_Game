@@ -49,7 +49,7 @@ bool j1Scene::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 		App->LoadGame("save_game.xml");
 
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+	if(App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 		App->SaveGame("save_game.xml");
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -101,6 +101,15 @@ bool j1Scene::Update(float dt)
 
 			right_kick = right_kick->next;
 		}
+	}
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
+		
+		App->pinball->launcher.joint->SetMotorSpeed(1);
+		App->pinball->launcher.joint->SetMaxMotorForce(2);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP) {
+		App->pinball->launcher.joint->SetMotorSpeed(-motor_speed);
+		App->pinball->launcher.joint->SetMaxMotorForce(50);
 	}
 
 	App->pinball->Draw();
