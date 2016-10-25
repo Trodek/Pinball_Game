@@ -13,6 +13,7 @@
 PinballBoard::PinballBoard() : j1Module()
 {
 	name.create("pinball");
+
 	background.rect = walls.rect = { 0,0,590,500 };
 	ball_sprite.rect = { 0,0,13,13 };
 	yellowsticker.rect = { 0,0,30,31 };
@@ -23,7 +24,10 @@ PinballBoard::PinballBoard() : j1Module()
 	x_sprite.rect = { 0,0,211,167 };
 	top_kiker_sprite.rect = { 0,0,26,54 };
 	score_left.rect = score_right.rect = { 0,0,81,35 };
-
+	pink_guy.rect = { 0,0,106,114 };
+	brown_web.rect = { 0,0,155,153 };
+	pink_web1.rect = pink_web2.rect = pink_web3.rect = { 0,0,141,139 };
+	launcher_sprite.rect = { 0,0,29,35 };
 }
 
 // Destructor
@@ -78,6 +82,14 @@ bool PinballBoard::Start()
 	score = 0;
 	high_score = 0;
 
+	pink_guy.image = App->tex->Load("Sprites/pink_guy.png");
+	brown_web.image = App->tex->Load("Sprites/brown_web.png");
+	pink_web1.image = App->tex->Load("Sprites/pink_web1.png");
+	pink_web2.image = App->tex->Load("Sprites/pink_web2.png");
+	pink_web3.image = App->tex->Load("Sprites/pink_web3.png");
+
+	launcher_sprite.image = App->tex->Load("Sprites/launcher.png");
+
 	return true;
 }
 
@@ -85,6 +97,22 @@ bool PinballBoard::Start()
 bool PinballBoard::Draw()
 {
 	App->render->Blit(background.image, 0, 0, &background.rect);
+
+	App->render->Blit(brown_web.image, 80, 25, &brown_web.rect);
+
+	//App->render->Blit(pink_web1.image, 87, 34, &pink_web1.rect);
+	
+	//App->render->Blit(pink_web2.image, 91, 32, &pink_web2.rect);
+	
+	//App->render->Blit(pink_web3.image, 80, 25, &pink_web3.rect);
+
+	App->render->Blit(pink_guy.image, 125, 55, &pink_guy.rect);
+
+	iPoint launch_pos;
+	launcher.body->GetPosition(launch_pos.x, launch_pos.y);
+	launch_pos.x -= launcher.body->width / 2;
+	launch_pos.y -= launcher.body->height / 2;
+	App->render->Blit(launcher_sprite.image, launch_pos.x-3, launch_pos.y, &launcher_sprite.rect);
 
 	int ball_x, ball_y;
 	ball->GetPosition(ball_x, ball_y);

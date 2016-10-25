@@ -87,6 +87,7 @@ private:
 
 	PhysBody*	launch_triger;
 	PhysBody*	tolaunch_triger;
+	Sprite		launcher_sprite;
 
 	PhysBody*	x_righttop_toTOP;
 	PhysBody*	x_lefttop_toTOP;
@@ -96,6 +97,12 @@ private:
 	PhysBody*	x_lefttop_toBOARD;
 	PhysBody*	x_leftbot_toBOARD;
 	PhysBody*	x_rightbot_toBOARD;
+
+	Sprite		pink_guy;
+	Sprite		brown_web;
+	Sprite		pink_web1;
+	Sprite		pink_web2;
+	Sprite		pink_web3;
 
 	//UI
 	Sprite		score_right;
