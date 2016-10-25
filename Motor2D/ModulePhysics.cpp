@@ -60,7 +60,7 @@ bool ModulePhysics::PreUpdate()
 	return true;
 }
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, int cat, int mask)
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, float rest, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
@@ -75,6 +75,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, int cat, int mas
 	fixture.density = 1.0f;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -86,7 +87,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, int cat, int mas
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius, int cat, int mask)
+PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius, float rest, int cat, int mask)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -101,7 +102,7 @@ PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius, int cat, 
 	fixture.density = 1.0f;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
-
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -113,7 +114,7 @@ PhysBody * ModulePhysics::CreateStaticCircle(int x, int y, int radius, int cat, 
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, int cat, int mask, int angle)
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, float rest, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
@@ -129,6 +130,7 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, in
 	fixture.density = 1.0f;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -141,7 +143,7 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, in
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int height, int cat, int mask, int angle)
+PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int height, float rest, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -157,6 +159,7 @@ PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int hei
 	fixture.density = 1.0f;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -169,7 +172,7 @@ PhysBody * ModulePhysics::CreateStaticRectangle(int x, int y, int width, int hei
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreatePolygon(int x, int y, int* points, int size, int cat, int mask, int angle)
+PhysBody * ModulePhysics::CreatePolygon(int x, int y, int* points, int size, float rest, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
@@ -192,6 +195,7 @@ PhysBody * ModulePhysics::CreatePolygon(int x, int y, int* points, int size, int
 	fixture.density = 1.0f;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -203,7 +207,7 @@ PhysBody * ModulePhysics::CreatePolygon(int x, int y, int* points, int size, int
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticPolygon(int x, int y, int* points, int size, int cat, int mask, int angle)
+PhysBody * ModulePhysics::CreateStaticPolygon(int x, int y, int* points, int size, float rest, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -226,6 +230,7 @@ PhysBody * ModulePhysics::CreateStaticPolygon(int x, int y, int* points, int siz
 	fixture.density = 1.0f;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -237,7 +242,7 @@ PhysBody * ModulePhysics::CreateStaticPolygon(int x, int y, int* points, int siz
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height, int cat, int mask, int angle)
+PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height, float rest, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -255,6 +260,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	fixture.isSensor = true;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -267,7 +273,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, int cat, int mask, int angle)
+PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, float rest, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
@@ -291,6 +297,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, int ca
 	fixture.shape = &shape;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -304,7 +311,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, int ca
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size, int cat, int mask, int angle)
+PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size, float rest, int cat, int mask, int angle)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -328,6 +335,7 @@ PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size
 	fixture.shape = &shape;
 	fixture.filter.categoryBits = cat;
 	fixture.filter.maskBits = mask;
+	fixture.restitution = rest;
 
 	b->CreateFixture(&fixture);
 
@@ -339,6 +347,11 @@ PhysBody * ModulePhysics::CreateStaticChain(int x, int y, int * points, int size
 	pbody->width = pbody->height = 0;
 
 	return pbody;
+}
+
+void ModulePhysics::DeleteObject(PhysBody * object)
+{
+	world->DestroyBody(object->body);
 }
 
 b2RevoluteJoint* ModulePhysics::CreateRevoluteJoint(PhysBody * anchor, PhysBody * body, iPoint anchor_offset, iPoint body_offset, bool enable_limit,

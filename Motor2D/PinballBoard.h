@@ -36,23 +36,29 @@ public:
 
 	bool Draw();
 
+	bool Update(float dt);
+
 	// Called before quitting
 	bool CleanUp();
 
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
+	void CreateBall();
+
 public:
 
 	p2List<kicker_info> left_kickers;
 	p2List<kicker_info> right_kickers;
-	kicker_info top_kicker;
-	launcher_info	launcher;
+	kicker_info			top_kicker;
+	launcher_info		launcher;
 
 private:
 	bool CreateBoardPhyisics();
 	bool CreateStickersCollisions();
 	bool CreateKickers();
 	bool CreateTrigers();
+
+	void DrawUI();
 
 private:
 

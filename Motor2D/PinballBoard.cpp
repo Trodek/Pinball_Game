@@ -54,7 +54,7 @@ bool PinballBoard::Start()
 	background.image = App->tex->Load("Sprites/background.png");
 
 	ball_sprite.image = App->tex->Load("Sprites/ball.png");
-	ball = App->physics->CreateCircle(300, 200, 6, BALL, LAUNCH);
+	CreateBall();
 
 	yellowsticker.image = App->tex->Load("Sprites/yellowsticker.png");
 	greysticker.image = App->tex->Load("Sprites/greysticker.png");
@@ -131,6 +131,12 @@ bool PinballBoard::Draw()
 	App->render->Blit(yellowsticker.image, 414, 84, &yellowsticker.rect);
 
 	App->render->Blit(greysticker.image, 144, 88, &greysticker.rect);  // grey sticker
+
+	return true;
+}
+
+bool PinballBoard::Update(float dt)
+{
 
 	return true;
 }
@@ -814,7 +820,7 @@ bool PinballBoard::CreateBoardPhyisics()
 		279, 160
 	};
 	size = 20;
-	App->physics->CreateStaticChain(0, 0, launcher_tub, size, LAUNCH, BALL);
+	App->physics->CreateStaticChain(0, 0, launcher_tub, size, 0.0f, LAUNCH, BALL);
 
 	// Middle X
 	{
@@ -877,31 +883,31 @@ bool PinballBoard::CreateBoardPhyisics()
 			9, 3
 		};
 		size = 112;
-		App->physics->CreateStaticChain(190, 173, midle_x, size, TOP, BALL);
+		App->physics->CreateStaticChain(190, 173, midle_x, size, 0.0f, TOP, BALL);
 	}
 	return true;
 }
 
 bool PinballBoard::CreateStickersCollisions()
 {
-	App->physics->CreateStaticCircle(386, 102, 10); //yellow stickers
-	App->physics->CreateStaticCircle(429, 97, 10);
-	App->physics->CreateStaticCircle(416, 139, 10);
+	App->physics->CreateStaticCircle(386, 102, 10, 1.025f); //yellow stickers
+	App->physics->CreateStaticCircle(429, 97, 10, 1.025f);
+	App->physics->CreateStaticCircle(416, 139, 10, 1.025f);
 
-	App->physics->CreateStaticCircle(158, 102, 10); // grey sticker
+	App->physics->CreateStaticCircle(158, 102, 10, 1.025f); // grey sticker
 
-	App->physics->CreateStaticCircle(323, 259, 10); //blue stickers
-	App->physics->CreateStaticCircle(267, 258, 10);
-	App->physics->CreateStaticCircle(273, 294, 10);
-	App->physics->CreateStaticCircle(291, 330, 10);
-	App->physics->CreateStaticCircle(321, 297, 10);
+	App->physics->CreateStaticCircle(323, 259, 10, 1.025f); //blue stickers
+	App->physics->CreateStaticCircle(267, 258, 10, 1.025f);
+	App->physics->CreateStaticCircle(273, 294, 10, 1.025f);
+	App->physics->CreateStaticCircle(291, 330, 10, 1.025f);
+	App->physics->CreateStaticCircle(321, 297, 10, 1.025f);
 	return true;
 }
 
 bool PinballBoard::CreateKickers()
 {
 	kicker_info kick;
-	kick.anchor = App->physics->CreateStaticCircle(128, 462, 5, BOARD, BALL);   // left bottom left kicker
+	kick.anchor = App->physics->CreateStaticCircle(128, 462, 5, 0.0f, BOARD, BALL);   // left bottom left kicker
 	int left_kicker_points[8] = {
 		8, 8,
 		8, 17,
@@ -909,17 +915,17 @@ bool PinballBoard::CreateKickers()
 		52, 14
 	};
 	int size = 8;
-	kick.body = App->physics->CreatePolygon(128, 462, left_kicker_points, size, BOARD, BALL);
+	kick.body = App->physics->CreatePolygon(128, 462, left_kicker_points, size, 0.0f, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 8,13 }, true, 25, -25, true, 30, 40);
 	left_kickers.add(kick);
 
-	kick.anchor = App->physics->CreateStaticCircle(58, 285, 5, BOARD, BALL);		//left mid kicker
-	kick.body = App->physics->CreatePolygon(58, 285, left_kicker_points, size, BOARD, BALL);
+	kick.anchor = App->physics->CreateStaticCircle(58, 285, 5, 0.0f, BOARD, BALL);		//left mid kicker
+	kick.body = App->physics->CreatePolygon(58, 285, left_kicker_points, size, 0.0f, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 8,13 }, true, 45, -5, true, 30, 40);
 	left_kickers.add(kick);
 
-	kick.anchor = App->physics->CreateStaticCircle(358, 462, 5, BOARD, BALL);		//right bottom left kicker
-	kick.body = App->physics->CreatePolygon(358, 462, left_kicker_points, size, BOARD, BALL);
+	kick.anchor = App->physics->CreateStaticCircle(358, 462, 5, 0.0f, BOARD, BALL);		//right bottom left kicker
+	kick.body = App->physics->CreatePolygon(358, 462, left_kicker_points, size, 0.0f, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 8,13 }, true, 25, -25, true, 30, 40);
 	left_kickers.add(kick);
 
@@ -929,18 +935,18 @@ bool PinballBoard::CreateKickers()
 		6, 17,
 		6, 14
 	};
-	kick.anchor = App->physics->CreateStaticCircle(228, 464, 5, BOARD, BALL);		//left bottom right kicker
-	kick.body = App->physics->CreatePolygon(228, 464, right_kicker_points, size, BOARD, BALL);
+	kick.anchor = App->physics->CreateStaticCircle(228, 464, 5, 0.0f, BOARD, BALL);		//left bottom right kicker
+	kick.body = App->physics->CreatePolygon(228, 464, right_kicker_points, size, 0.0f, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 50,13 }, true, 25, -25, true, -30, 40);
 	right_kickers.add(kick);
 
-	kick.anchor = App->physics->CreateStaticCircle(540, 282, 5, BOARD, BALL);		//right mid kicker
-	kick.body = App->physics->CreatePolygon(540, 282, right_kicker_points, size, BOARD, BALL);
+	kick.anchor = App->physics->CreateStaticCircle(540, 282, 5, 0.0f, BOARD, BALL);		//right mid kicker
+	kick.body = App->physics->CreatePolygon(540, 282, right_kicker_points, size, 0.0f, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 50,13 }, true, 5, -45, true, -30, 40);
 	right_kickers.add(kick);
 
-	kick.anchor = App->physics->CreateStaticCircle(461, 462, 5, BOARD, BALL);		//right bottom right kicker
-	kick.body = App->physics->CreatePolygon(461, 462, right_kicker_points, size, BOARD, BALL);
+	kick.anchor = App->physics->CreateStaticCircle(461, 462, 5, 0.0f, BOARD, BALL);		//right bottom right kicker
+	kick.body = App->physics->CreatePolygon(461, 462, right_kicker_points, size, 0.0f, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 50,13 }, true, 25, -25, true, -30, 40);
 	right_kickers.add(kick);
 
@@ -952,21 +958,22 @@ bool PinballBoard::CreateKickers()
 		17, 7
 	};
 	size = 10;
-	kick.anchor = App->physics->CreateStaticCircle(295, 98, 5, BOARD, BALL);
-	kick.body = App->physics->CreatePolygon(295, 98, top_kicker_points, size, BOARD, BALL);
+	kick.anchor = App->physics->CreateStaticCircle(295, 98, 5, 0.0f, BOARD, BALL);
+	kick.body = App->physics->CreatePolygon(295, 98, top_kicker_points, size, 0.0f, BOARD, BALL);
 	kick.joint = App->physics->CreateRevoluteJoint(kick.anchor, kick.body, { 0,0 }, { 13,8 }, true, 20, -20, true, 30, 40);
 	top_kicker = kick;
 	
 	launcher.anchor = App->physics->CreateStaticRectangle(294, 486, 5, 5);
-	launcher.body = App->physics->CreateRectangle(294, 480, 20, 2, LAUNCH);
+	launcher.body = App->physics->CreateRectangle(294, 480, 20, 4, 0.0f, LAUNCH);
 	launcher.joint = App->physics->CreatePrismaticJoint(launcher.anchor, launcher.body, { 0,0 }, { 0,0 }, true, 1, -30, true, -10, 5);
 
 	return false;
 }
 
+
 bool PinballBoard::CreateTrigers()
 {
-	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 1, LAUNCH);
+	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 1, 0.0f, LAUNCH);
 	launch_triger->listener = App->pinball;
 
 	tolaunch_triger = App->physics->CreateRectangleSensor(295, 157, 32, 1);
@@ -974,23 +981,35 @@ bool PinballBoard::CreateTrigers()
 
 	x_lefttop_toTOP = App->physics->CreateRectangleSensor(214, 189, 1, 10);
 	x_lefttop_toTOP->listener = App->pinball;
-	x_lefttop_toBOARD = App->physics->CreateRectangleSensor(210, 189, 1, 10, TOP);
+	x_lefttop_toBOARD = App->physics->CreateRectangleSensor(210, 189, 1, 10, 0.0f, TOP);
 	x_lefttop_toBOARD->listener = App->pinball;
 
 	x_righttop_toTOP = App->physics->CreateRectangleSensor(374, 189, 1, 10);
 	x_righttop_toTOP->listener = App->pinball;
-	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 1, 10, TOP);
+	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 1, 10, 0.0f, TOP);
 	x_righttop_toBOARD->listener = App->pinball;
 
-	x_rightbot_toTOP = App->physics->CreateRectangleSensor(370, 302, 1, 60, BOARD, BALL, 40);
+	x_rightbot_toTOP = App->physics->CreateRectangleSensor(370, 302, 1, 60, 0.0f, BOARD, BALL, 40);
 	x_rightbot_toTOP->listener = App->pinball;
-	x_rightbot_toBOARD = App->physics->CreateRectangleSensor(373, 305, 1, 60, TOP, BALL, 40);
+	x_rightbot_toBOARD = App->physics->CreateRectangleSensor(373, 305, 1, 60, 0.0f, TOP, BALL, 40);
 	x_rightbot_toBOARD->listener = App->pinball;
 
-	x_leftbot_toTOP = App->physics->CreateRectangleSensor(217, 302, 1, 60, BOARD, BALL, -40);
+	x_leftbot_toTOP = App->physics->CreateRectangleSensor(217, 302, 1, 60, 0.0f, BOARD, BALL, -40);
 	x_leftbot_toTOP->listener = App->pinball;
-	x_leftbot_toBOARD = App->physics->CreateRectangleSensor(215, 305, 1, 60, TOP, BALL, -40);
+	x_leftbot_toBOARD = App->physics->CreateRectangleSensor(215, 305, 1, 60, 0.0f, TOP, BALL, -40);
 	x_leftbot_toBOARD->listener = App->pinball;
 
 	return true;
+}
+
+void PinballBoard::DrawUI()
+{
+}
+
+void PinballBoard::CreateBall()
+{
+	if (ball != nullptr) {
+		App->physics->DeleteObject(ball);
+	}
+	ball = App->physics->CreateCircle(300, 440, 6, 0.0f, BALL, LAUNCH);
 }
