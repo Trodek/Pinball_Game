@@ -13,6 +13,7 @@
 #include "j1FileSystem.h"
 #include "PinballBoard.h"
 #include "j1App.h"
+#include "ModuleFonts.h"
 
 
 // Constructor
@@ -30,6 +31,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	fs = new j1FileSystem();
 	physics = new ModulePhysics();
 	pinball = new PinballBoard();
+	fonts = new ModuleFonts();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -38,9 +40,11 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(win);
 	AddModule(tex);
 	AddModule(audio);
+	AddModule(fonts);
 	AddModule(physics);
 	AddModule(pinball);
 	AddModule(scene);
+	
 
 	// render last to swap buffer
 	AddModule(render);

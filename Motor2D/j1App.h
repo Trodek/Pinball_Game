@@ -15,6 +15,7 @@ class j1FileSystem;
 class j1Scene;
 class ModulePhysics;
 class PinballBoard;
+class ModuleFonts;
 
 class j1App
 {
@@ -87,6 +88,7 @@ public:
 	j1FileSystem*		fs;
 	ModulePhysics*		physics;
 	PinballBoard*		pinball;
+	ModuleFonts*		fonts;
 
 private:
 
