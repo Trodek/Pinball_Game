@@ -8,6 +8,7 @@
 #include "j1Window.h"
 #include "PinballBoard.h"
 #include "ModulePhysics.h"
+#include "ModuleFonts.h"
 
 PinballBoard::PinballBoard() : j1Module()
 {
@@ -21,6 +22,7 @@ PinballBoard::PinballBoard() : j1Module()
 	right_puncher.rect = { 0,0,67,79 };
 	x_sprite.rect = { 0,0,211,167 };
 	top_kiker_sprite.rect = { 0,0,26,54 };
+	score_left.rect = score_right.rect = { 0,0,81,35 };
 
 }
 
@@ -67,6 +69,14 @@ bool PinballBoard::Start()
 	right_puncher.image = App->tex->Load("Sprites/right_puncher.png");
 
 	x_sprite.image = App->tex->Load("Sprites/midle_x.png");
+
+	score_left.image = App->tex->Load("Sprites/score_left.png");
+	score_right.image = App->tex->Load("Sprites/score_right.png");
+
+	orange_font = App->fonts->Load("Sprites/orange_font.png", " .!'0123456789ABCEFGHILNPRSTUabcdefghiklnoprstuvy   ", 2);
+	white_font = App->fonts->Load("Sprites/white_font.png", " .!'0123456789ABCEFGHILNPRSTUabcdefghiklnoprstuvy   ", 2);
+	score = 0;
+	high_score = 0;
 
 	return true;
 }
@@ -131,6 +141,9 @@ bool PinballBoard::Draw()
 	App->render->Blit(yellowsticker.image, 414, 84, &yellowsticker.rect);
 
 	App->render->Blit(greysticker.image, 144, 88, &greysticker.rect);  // grey sticker
+
+
+	DrawUI();
 
 	return true;
 }
@@ -1004,6 +1017,14 @@ bool PinballBoard::CreateTrigers()
 
 void PinballBoard::DrawUI()
 {
+	App->render->Blit(score_left.image, 25, 460, &score_left.rect);
+	App->render->Blit(score_right.image, 487, 460, &score_right.rect);
+	char char_score[10];
+	sprintf_s(char_score, "%.5d", score);
+	App->fonts->Blit(27, 475, white_font, char_score);
+	char char_hscore[10];
+	sprintf_s(char_hscore, "%.5d", high_score);
+	App->fonts->Blit(489, 475, orange_font, char_hscore);
 }
 
 void PinballBoard::CreateBall()

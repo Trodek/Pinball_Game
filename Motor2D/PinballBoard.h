@@ -97,6 +97,16 @@ private:
 	PhysBody*	x_leftbot_toBOARD;
 	PhysBody*	x_rightbot_toBOARD;
 
+	//UI
+	Sprite		score_right;
+	Sprite		score_left;
+
+	int			orange_font;
+	int			white_font;
+
+	int			score;
+	int			high_score;
+
 };
 
 #endif // !_PinballBoard_
