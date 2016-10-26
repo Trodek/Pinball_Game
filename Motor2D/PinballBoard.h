@@ -151,6 +151,14 @@ private:
 	Sprite		bonus_right_letters;
 	Sprite		bonus_right_frame;
 
+	Sprite		x_arrows;
+	Sprite		eat_arrows;
+	Sprite		tel_marks;
+	Sprite		right_eleph_marks;
+	Sprite		left_eleph_marks;
+	Sprite		rocket_single;
+	Sprite		rocket_double;
+
 	//UI
 	Sprite		score_right;
 	Sprite		score_left;

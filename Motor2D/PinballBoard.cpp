@@ -35,7 +35,7 @@ PinballBoard::PinballBoard() : j1Module()
 	mill_sprite.rect = { 0,0,57,13 };
 	tunnel.rect = { 0,0,530,244 };
 	bonus_girl.rect = { 0,0,106,80 };
-	bell.rect = { 0,0,51,51 };
+	bell.rect = { 0,0,89,52 };
 	blue_flame.rect = { 0,0,32,32 };
 	bonus_left_frame.rect = { 0,0,112,66 };
 	bonus_left_letters.rect = { 0,0,80,24 };
@@ -215,7 +215,7 @@ bool PinballBoard::Draw()
 
 	App->render->Blit(mill_sprite.image, 265, 380, &mill_sprite.rect, 1.0f, mill.body->GetRotation(), 57, 16);
 
-	App->render->Blit(bell.image, 269, 158, &bell.rect);
+	App->render->Blit(bell.image, 252, 150, &bell.rect);
 
 	int kick_x, kick_y;
 	top_kicker.anchor->GetPosition(kick_x, kick_y);
