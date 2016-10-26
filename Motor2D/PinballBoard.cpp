@@ -241,7 +241,7 @@ bool PinballBoard::Draw()
 
 	int kick_x, kick_y;
 	top_kicker.anchor->GetPosition(kick_x, kick_y);
-	App->render->Blit(top_kiker_sprite.image, kick_x, kick_y-4, &top_kiker_sprite.rect, 1.0f, top_kicker.body->GetRotation());
+	App->render->Blit(top_kiker_sprite.image, kick_x-10, kick_y-4, &top_kiker_sprite.rect, 1.0f, top_kicker.body->GetRotation(), top_kiker_sprite.rect.w,top_kiker_sprite.rect.h/3);
 
 	App->render->Blit(yellowsticker.image, 371, 89, &yellowsticker.rect);  // yellow stickers
 	App->render->Blit(yellowsticker.image, 401, 126, &yellowsticker.rect);
