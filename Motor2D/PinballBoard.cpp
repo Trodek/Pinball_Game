@@ -50,8 +50,10 @@ PinballBoard::PinballBoard() : j1Module()
 	rocket_single.rect = {0,0,27,39};
 	rocket_double.rect = {0,0,51,46};
 	stick_hit.rect = { 0,0,47,47 };
+	bonus_left.rect = { 0,0,18,65 };
+	bonus_right.rect = { 0,0,19,18 };
 	blue_guy.rect = { 0,0,108,173 };
-	spiner.rect = { 0,0,11,11 };
+	spiner.rect = { 0,0,22,22 };
 }
 
 // Destructor
@@ -80,6 +82,9 @@ bool PinballBoard::Start()
 	CreateKickers();
 	CreateTrigers();
 	CreateBouncers();
+
+	bonus_rb = bonus_ro = bonus_rn = bonus_ru = bonus_rs = false;
+	bonus_lb = bonus_lo = bonus_ln = bonus_lu = bonus_ls = false;
 
 	walls.image = App->tex->Load("Sprites/Walls.png");
 	background.image = App->tex->Load("Sprites/background.png");
@@ -166,7 +171,10 @@ bool PinballBoard::Start()
 	gm_sound = App->audio->LoadFx("Sounds/sound 65 (good_morning_dillydale).ogg");
 	loseball_sound = App->audio->LoadFx("Sounds/sound 542 (balll_goes_out_of_play).ogg");
 	eat_sound = App->audio->LoadFx("Sounds/sound 514 (greedy_gulp).ogg");
-	
+	bell_sound = App->audio->LoadFx("Sounds/sound 541 (launch_tube_bell).ogg");
+
+	bonus_left.image = App->tex->Load("Sprites/bonus_left_on.png");
+	bonus_right.image = App->tex->Load("Sprites/bonus_right_on.png");
 
 	return true;
 }
@@ -261,6 +269,18 @@ bool PinballBoard::Draw()
 
 	// draw stuff
 
+	if (bonus_lb) App->render->Blit(bonus_left.image, 145, 367, &bonus_left.rect, 1.0f, -50);
+	if (bonus_lo) App->render->Blit(bonus_left.image, 155, 358, &bonus_left.rect, 1.0f, -25);
+	if (bonus_ln) App->render->Blit(bonus_left.image, 169, 355, &bonus_left.rect, 1.0f, 0);
+	if (bonus_lu) App->render->Blit(bonus_left.image, 182, 358, &bonus_left.rect, 1.0f, 25);
+	if (bonus_ls) App->render->Blit(bonus_left.image, 193, 368, &bonus_left.rect, 1.0f, 50);
+
+	if (bonus_rb) App->render->Blit(bonus_right.image, 365, 390, &bonus_right.rect, 1.0f, -50);
+	if (bonus_ro) App->render->Blit(bonus_right.image, 378, 369, &bonus_right.rect, 1.0f, -25);
+	if (bonus_rn) App->render->Blit(bonus_right.image, 403, 360, &bonus_right.rect, 1.0f, 0);
+	if (bonus_ru) App->render->Blit(bonus_right.image, 427, 369, &bonus_right.rect, 1.0f, 25);
+	if (bonus_rs) App->render->Blit(bonus_right.image, 440, 391, &bonus_right.rect, 1.0f, 50);;
+
 	App->render->Blit(bonus_right_letters.image, 367, 360, &bonus_right_letters.rect);
 	App->render->Blit(bonus_left_letters.image, 137, 370, &bonus_left_letters.rect);
 	App->render->Blit(bonus_girl.image, 125, 385, &bonus_girl.rect);
@@ -313,11 +333,11 @@ bool PinballBoard::Draw()
 	App->render->Blit(mill_sprite.image, 265, 380, &mill_sprite.rect, 1.0f, mill.body->GetRotation(), 57, 16);
 
 	angle += 50;
-	App->render->Blit(spiner.image, 92, 198, &spiner.rect, 1.0f, angle);
-	App->render->Blit(spiner.image, 78, 208, &spiner.rect,1.0f,-angle);
+	App->render->Blit(spiner.image, 90, 188, &spiner.rect, 1.0f, angle);
+	App->render->Blit(spiner.image, 68, 204, &spiner.rect,1.0f,-angle);
 
-	App->render->Blit(spiner.image, 540, 223, &spiner.rect, 1.0f, angle);
-	App->render->Blit(spiner.image, 523, 218, &spiner.rect, 1.0f, -angle);
+	App->render->Blit(spiner.image, 537, 220, &spiner.rect, 1.0f, angle);
+	App->render->Blit(spiner.image, 515, 208, &spiner.rect, 1.0f, -angle);
 
 	App->render->Blit(bell.image, 269, 158, &bell.rect);
 
@@ -520,6 +540,17 @@ bool PinballBoard::Update(float dt)
 		fling = false;
 	}
 
+	if (bonus_lb && bonus_lo && bonus_ln && bonus_lu && bonus_ls) {
+		AddBonusScore();
+		bonus_lb = bonus_lo = bonus_ln = bonus_lu = bonus_ls = false;
+	}
+
+
+	if (bonus_rb && bonus_ro && bonus_rn && bonus_ru && bonus_rs) {
+		AddBonusScore();
+		bonus_rb = bonus_ro = bonus_rn = bonus_ru = bonus_rs = false;
+	}
+
 	count++;
 	return true;
 }
@@ -556,6 +587,8 @@ bool PinballBoard::CleanUp()
 	App->tex->UnLoad(bell.image);
 	App->tex->UnLoad(blue_flame.image);
 	App->tex->UnLoad(pink_puncher.image);
+	App->tex->UnLoad(bonus_left.image);
+	App->tex->UnLoad(bonus_right.image);
 
 	return true;
 }
@@ -634,7 +667,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 	}
 	else if (bodyA == trigger_top_mid_left || bodyA == trigger_top_mid_right) {
 		if (bodyB == ball) {
-			if(!created_mid_walls) to_create_mid_walls = true;
+			if (!created_mid_walls) to_create_mid_walls = true;
 		}
 	}
 	else if (bodyA == tp_left) {
@@ -714,12 +747,79 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 		}
 
 	}
-	else if (bodyA == eat) 
+	else if (bodyA == bonus_l1) {
+		if (bodyB == ball) {
+			bonus_lb = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == bonus_l2) {
+		if (bodyB == ball) {
+			bonus_lo = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == bonus_l3) {
+		if (bodyB == ball) {
+			bonus_ln = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == bonus_l4) {
+		if (bodyB == ball) {
+			bonus_lu = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == bonus_l5) {
+		if (bodyB == ball) {
+			bonus_ls = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == bonus_r1) {
+		if (bodyB == ball) {
+			bonus_rb = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == bonus_r2) {
+		if (bodyB == ball) {
+			bonus_ro = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == bonus_r3) {
+		if (bodyB == ball) {
+			bonus_rn = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+
+	else if (bodyA == bonus_r4) {
+		if (bodyB == ball) {
+			bonus_ru = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == bonus_r5) {
+		if (bodyB == ball) {
+			bonus_rs = true;
+			App->audio->PlayFx(bonus_sound);
+		}
+	}
+	else if (bodyA == eat) {
 		if (bodyB == ball) {
 			add_force = true;
 			flight_time_start = count;
 			App->audio->PlayFx(eat_sound);
 		}
+	}
+	else if (bodyA == bell_trigger) {
+		if (bodyB == ball) {
+			App->audio->PlayFx(bell_sound);
+		}
+	}
 }
 
 bool PinballBoard::CreateBoardPhyisics()
@@ -1823,6 +1923,31 @@ bool PinballBoard::CreateTrigers()
 	eat = App->physics->CreateRectangleSensor(47, 126, 10, 10);
 	eat->listener = App->pinball;
 
+	bonus_l1 = App->physics->CreateRectangleSensor(142, 390, 5, 5);
+	bonus_l1->listener = App->pinball;
+	bonus_l2 = App->physics->CreateRectangleSensor(158, 379, 5, 5);
+	bonus_l2->listener = App->pinball;
+	bonus_l3 = App->physics->CreateRectangleSensor(177, 373, 5, 5);
+	bonus_l3->listener = App->pinball;
+	bonus_l4 = App->physics->CreateRectangleSensor(198, 377, 5, 5);
+	bonus_l4->listener = App->pinball;
+	bonus_l5 = App->physics->CreateRectangleSensor(214, 389, 5, 5);
+	bonus_l5->listener = App->pinball;
+
+	bonus_r1 = App->physics->CreateRectangleSensor(375, 400, 5, 5);
+	bonus_r1->listener = App->pinball;
+	bonus_r2 = App->physics->CreateRectangleSensor(388, 378, 5, 5);
+	bonus_r2->listener = App->pinball;
+	bonus_r3 = App->physics->CreateRectangleSensor(413, 370, 5, 5);
+	bonus_r3->listener = App->pinball;
+	bonus_r4 = App->physics->CreateRectangleSensor(435, 378, 5, 5);
+	bonus_r4->listener = App->pinball;
+	bonus_r5 = App->physics->CreateRectangleSensor(450, 400, 5, 5);
+	bonus_r5->listener = App->pinball;
+
+	bell_trigger = App->physics->CreateRectangleSensor(295, 190, 32, 5,0.0f,LAUNCH);
+	bell_trigger->listener = App->pinball;
+
 	return true;
 }
 
@@ -1842,9 +1967,10 @@ void PinballBoard::Reset()
 	losed_balls = 0;
 	score = 0;
 	count = 0;
+	bonus_rb = bonus_ro = bonus_rn = bonus_ru = bonus_rs = false;
+	bonus_lb = bonus_lo = bonus_ln = bonus_lu = bonus_ls = false;
 	Restart();
 }
-
 
 void PinballBoard::AddScore()
 {

@@ -102,6 +102,9 @@ private:
 	Sprite		left_puncher_y;
 	Sprite		right_puncher_y;
 
+	Sprite		bonus_left;
+	Sprite		bonus_right;
+
 	Sprite		teleport;
 
 	Sprite		tunnel;
@@ -131,6 +134,8 @@ private:
 
 	PhysBody*	to_destroy_top_mid_left;
 	PhysBody*	to_destroy_top_mid_right;
+
+	PhysBody*	bell_trigger;
 
 	bool		lose_triggered = false;
 	bool		to_create_mid_walls = false;
@@ -251,6 +256,31 @@ private:
 	PhysBody*	rectangle21;
 	PhysBody*	rectangle22;
 	PhysBody*	rectangle23;
+
+	PhysBody*	bonus_l1;
+	PhysBody*	bonus_l2;
+	PhysBody*	bonus_l3;
+	PhysBody*	bonus_l4;
+	PhysBody*	bonus_l5;
+
+	PhysBody*	bonus_r1;
+	PhysBody*	bonus_r2;
+	PhysBody*	bonus_r3;
+	PhysBody*	bonus_r4;
+	PhysBody*	bonus_r5;
+
+	bool  bonus_lb;
+	bool  bonus_lo;
+	bool  bonus_ln;
+	bool  bonus_lu;
+	bool  bonus_ls;
+
+	bool  bonus_rb;
+	bool  bonus_ro;
+	bool  bonus_rn;
+	bool  bonus_ru;
+	bool  bonus_rs;
+
 	int			pinkrect_time = 15;
 	int			pinkrect_time_start;
 	bool		pinkrect1_collided = false;
@@ -271,6 +301,7 @@ private:
 	uint gm_sound;
 	uint loseball_sound;
 	uint eat_sound;
+	uint bell_sound;
 };
 
 #endif // !_PinballBoard_
