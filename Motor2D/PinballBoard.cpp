@@ -323,17 +323,16 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			int x, y;
 			lefttube_triggers.start->data->GetPosition(x, y);
 			b2Vec2 target(x, y);
-			tube_run = App->physics->CreateMouseJoint(ball->body , target);
+			tube_run = App->physics->CreateMotorJoint(ball->body , target);
 			LOG("%d %d", x, y);
 		}
 	}
 	else if (lefttube_triggers.find(bodyA) != -1) {
-
 		if (bodyB == ball) {
 			int x, y;
 			lefttube_triggers[lefttube_triggers.find(bodyA) + 1]->GetPosition(x, y);
-			b2Vec2 target(x, y);
-			tube_run->SetTarget(target);
+			LOG("%d %d", x, y);
+			b2Vec2 target(0.02f*x, 0.02f*y);
 		}
 	}
 }
@@ -1283,62 +1282,62 @@ bool PinballBoard::CreateTrigers()
 	trigger_lefttube->listener = App->pinball;
 
 	PhysBody* aux;
-	aux = App->physics->CreateRectangleSensor(90, 198, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(90, 198, 1, 1, 0.0f, TOP, BALL, 0);
 	aux->listener = App->pinball;
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(107, 176, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(107, 176, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(104, 164, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(104, 164, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(65, 154, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(65, 154, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(65, 138, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(65, 138, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(108, 115, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(108, 115, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(108, 96, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(108, 96, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(87, 78, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(87, 78, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(100, 64, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(100, 64, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(148, 64, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(148, 64, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(155, 57, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(155, 57, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(161, 34, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(161, 34, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(182, 39, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(182, 39, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(197, 50, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(197, 50, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(210, 45, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(210, 45, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(226, 31, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(226, 31, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(246, 33, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(246, 33, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(254, 47, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(254, 47, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	aux = App->physics->CreateRectangleSensor(303, 50, 3, 3,0.0f, TOP, BALL, 0);
+	aux = App->physics->CreateRectangleSensor(303, 50, 1, 1, 0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
 	trigger_lose_left = App->physics->CreateRectangleSensor(170, 500, 90, 5, 0.0f, BOARD, BALL);

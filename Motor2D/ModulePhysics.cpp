@@ -408,20 +408,20 @@ b2PrismaticJoint * ModulePhysics::CreatePrismaticJoint(PhysBody * anchor, PhysBo
 	return (b2PrismaticJoint*)world->CreateJoint(&def);
 }
 
-b2MouseJoint* ModulePhysics::CreateMouseJoint(b2Body* body, b2Vec2 target)
+b2MotorJoint* ModulePhysics::CreateMotorJoint(b2Body* body, b2Vec2 target)
 {
 	target.x = PIXEL_TO_METERS(target.x);
 	target.y = PIXEL_TO_METERS(target.y);
 
-	b2MouseJointDef def;
+	b2MotorJointDef def;
 	def.bodyA = ground;
 	def.bodyB = body;
-	def.target = target;
-	def.dampingRatio = 0.5f;
-	def.frequencyHz = 2.0f;
+	def.maxTorque = 100.0f * body->GetMass();
 	def.maxForce = 100.0f * body->GetMass();
 
-	return (b2MouseJoint*)world->CreateJoint(&def);
+	
+
+	return (b2MotorJoint*)world->CreateJoint(&def);
 }
 
 void ModulePhysics::DeleteJoint(b2MouseJoint* joint)
@@ -537,7 +537,6 @@ bool ModulePhysics::PostUpdate()
 		def.target = mouse;
 		def.dampingRatio = 0.5f;
 		def.frequencyHz = 2.0f;
-		def.collideConnected = true;
 		def.maxForce = 100.0f * selected->GetMass();
 
 		mouse_joint = (b2MouseJoint*)world->CreateJoint(&def);
