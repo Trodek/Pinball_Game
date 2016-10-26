@@ -143,7 +143,9 @@ bool PinballBoard::Start()
 	right_eleph_marks.image = App->tex->Load("Sprites/right_elephant_trigger_marks.png");
 	left_eleph_marks.image = App->tex->Load("Sprites/left_elephant_trigger_marks.png");
 	rocket_single.image = App->tex->Load("Sprites/rocket_trigger_mark.png");
-	rocket_double.image = App->tex->Load("Sprites/rocket_trigger_mark.png");
+	rocket_double.image = App->tex->Load("Sprites/2rocket_trigger_mark.png");
+
+	App->audio->PlayMusic("Sounds/song.ogg");
 
 	return true;
 }
@@ -205,11 +207,18 @@ bool PinballBoard::Draw()
 	App->render->Blit(teleport.image, 47, 316, &teleport.rect);
 	App->render->Blit(teleport.image, 524, 316, &teleport.rect);
 
+	App->render->Blit(eat_arrows.image, 45, 200, &eat_arrows.rect);
+	App->render->Blit(tel_marks.image, 360, 67, &tel_marks.rect);
+	App->render->Blit(left_eleph_marks.image, 127, 253, &left_eleph_marks.rect);
+	App->render->Blit(right_eleph_marks.image, 327, 253, &right_eleph_marks.rect);
+	App->render->Blit(rocket_double.image, 450, 185, &rocket_double.rect);
+
 	int ball_x, ball_y;
 	ball->GetPosition(ball_x, ball_y);
 	if (ball->body->GetFixtureList()->GetFilterData().maskBits == TOP) {
 		App->render->Blit(walls.image, 0, 0, &walls.rect);
 		App->render->Blit(x_sprite.image, 190, 173, &x_sprite.rect);
+		App->render->Blit(x_arrows.image, 210, 263, &x_arrows.rect);
 
 		App->render->Blit(tunnel.image, 43, 0, &tunnel.rect);
 
@@ -225,6 +234,7 @@ bool PinballBoard::Draw()
 	if (ball->body->GetFixtureList()->GetFilterData().maskBits != TOP) {
 		App->render->Blit(walls.image, 0, 0, &walls.rect);
 		App->render->Blit(x_sprite.image, 190, 173, &x_sprite.rect);
+		App->render->Blit(x_arrows.image, 210, 263, &x_arrows.rect);
 
 		App->render->Blit(tunnel.image, 43, 0, &tunnel.rect);
 
@@ -255,12 +265,8 @@ bool PinballBoard::Draw()
 	App->render->Blit(right_puncher_o.image, 442, 372, &right_puncher_o.rect);	//orange punchers
 	App->render->Blit(left_puncher_o.image, 316, 374, &left_puncher_o.rect);
 
-	
-
 	App->render->Blit(mouth.image, 38, 113, &mouth.rect);
 
-	App->render->Blit(blue_flame.image, 451, 194, &blue_flame.rect);
-	App->render->Blit(blue_flame.image, 463, 210, &blue_flame.rect);
 
 	DrawUI();
 
