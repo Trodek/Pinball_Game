@@ -65,6 +65,8 @@ private:
 
 private:
 
+	uint count = 0;
+
 	iPoint offset;
 	
 	p2SString	default_map;
@@ -116,6 +118,7 @@ private:
 	bool		lose_triggered = false;
 
 	bool		lefttube_triggered = false;
+	bool		lefttubejoint_created = true;
 	path_joint*	lefttube;
 
 	Sprite		pink_guy;

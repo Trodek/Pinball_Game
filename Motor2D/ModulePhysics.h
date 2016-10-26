@@ -70,9 +70,9 @@ public:
 	b2PrismaticJoint* CreatePrismaticJoint(PhysBody* anchor,PhysBody* body, iPoint anchor_offset, iPoint body_offset, bool enable_limit, float max_trans, float min_trans, bool enable_motor, int motor_speed, int max_force);
 	b2MotorJoint* CreateMotorJoint(b2Body* body, b2Vec2 target);
 
-	path_joint* CreatePathJoint(b2Body* body, int *path, int path_size);
+	path_joint* CreatePathJoint(b2Body* body, int *path, int path_size, int x_offset = 0, int y_offset = 0);
 
-	void DeleteJoint(b2Joint* joint);
+	void DeleteJoint(b2MouseJoint* joint);
 
 	void SetGround(b2Body* body) {
 		ground = body;

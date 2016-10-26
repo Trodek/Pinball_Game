@@ -230,19 +230,89 @@ bool PinballBoard::Draw()
 
 	DrawUI();
 
+
+	// TEST
+	int path[40] = {
+		53, 217,
+		45, 200,
+		62, 175,
+		58, 164,
+		23, 157,
+		17, 140,
+		63, 115,
+		65, 98,
+		43, 80,
+		49, 66,
+		101, 64,
+		110, 55,
+		110, 33,
+		133, 35,
+		147, 52,
+		160, 49,
+		180, 30,
+		199, 35,
+		214, 49,
+		252, 50
+	};
+	for (int i = 0; i < 40; i++) {
+		App->render->Blit(lose_ball.image, path[i++]+35, path[i]-10, &lose_ball.rect);
+	}
+
+
+
 	return true;
 }
 
 bool PinballBoard::Update(float dt)
 {
 	if (lefttube_triggered) {
-		iPoint ball_pos;
-		ball->GetPosition(ball_pos.x, ball_pos.y);
-		if (ball_pos.x == lefttube->path[lefttube->cur_point].x && ball_pos.y == lefttube->path[lefttube->cur_point].y && lefttube->cur_point < lefttube->points) {
-			lefttube->cur_point++;
-			lefttube->joint->SetTarget(lefttube->path[lefttube->cur_point]);
+		if (!lefttubejoint_created) {
+			int path[40] = {
+				53, 217,
+				45, 200,
+				62, 175,
+				58, 164,
+				23, 157,
+				17, 140,
+				63, 115,
+				65, 98,
+				43, 80,
+				49, 66,
+				101, 64,
+				110, 55,
+				110, 33,
+				133, 35,
+				147, 52,
+				160, 49,
+				180, 30,
+				199, 35,
+				214, 49,
+				252, 50
+			};
+			lefttube = App->physics->CreatePathJoint(ball->body, path, 40, 40,-5);
+			lefttubejoint_created = true;
+		}
+		else {
+			iPoint ball_pos;
+			ball->GetPosition(ball_pos.x, ball_pos.y);
+			if (lefttube->cur_point < lefttube->points) {
+				if (count % 20 == 0) {
+					lefttube->cur_point++;
+					lefttube->joint->SetTarget(lefttube->path[lefttube->cur_point]);
+				}
+			}
+			else {
+				App->physics->DeleteJoint(lefttube->joint);
+				lefttube_triggered = false;
+				b2Filter fil;
+				fil.categoryBits = BALL;
+				fil.maskBits = BOARD;
+				ball->body->GetFixtureList()->SetFilterData(fil);
+			}
 		}
 	}
+
+	count++;
 	return true;
 }
 
@@ -327,28 +397,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			fil.maskBits = TOP;
 			ball->body->GetFixtureList()->SetFilterData(fil);
 			lefttube_triggered = true;
-			int path[38] = {
-				50, 213,
-				45, 200,
-				61, 180,
-				59, 163,
-				22, 157,
-				19, 140,
-				66, 113,
-				65, 96,
-				42, 77,
-				49, 66,
-				107, 62,
-				111, 34,
-				135, 35,
-				147, 50,
-				161, 50,
-				177, 30,
-				197, 33,
-				211, 48,
-				254, 50
-			};
-			lefttube = App->physics->CreatePathJoint(ball->body, path, 38);
+			lefttubejoint_created = false;
 		}
 	}
 }
