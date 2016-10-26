@@ -184,7 +184,7 @@ bool PinballBoard::Draw()
 
 	if (pinkrect2_collided) {
 		if (count < pinkrect_time_start + pinkrect_time) {
-			App->render->Blit(pink_web1.image, 87, 34, &pink_web1.rect);
+			App->render->Blit(pink_web2.image, 91, 32, &pink_web2.rect);
 		}
 		else {
 			pinkrect2_collided = false;
@@ -193,18 +193,12 @@ bool PinballBoard::Draw()
 
 	if (pinkrect3_collided) {
 		if (count < pinkrect_time_start + pinkrect_time) {
-			App->render->Blit(pink_web1.image, 87, 34, &pink_web1.rect);
+			App->render->Blit(pink_web3.image, 80, 25, &pink_web3.rect);
 		}
 		else {
 			pinkrect3_collided = false;
 		}
 	}
-
-	/*
-	
-	App->render->Blit(pink_web2.image, 91, 32, &pink_web2.rect);
-	
-	App->render->Blit(pink_web3.image, 80, 25, &pink_web3.rect);*/
 
 	App->render->Blit(pink_guy.image, 125, 55, &pink_guy.rect);
 
@@ -484,6 +478,16 @@ bool PinballBoard::Update(float dt)
 
 	}
 
+	if (add_force) {
+		add_force = false;
+		b2Filter fil;
+		fil.categoryBits = BALL;
+		fil.maskBits = LAUNCH;
+		ball->body->GetFixtureList()->SetFilterData(fil);
+		b2Vec2 force(7.0f, -1.0f);
+		ball->body->ApplyForceToCenter(force, true);
+	}
+
 	count++;
 	return true;
 }
@@ -567,6 +571,11 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 				}
 				else
 					Restart();
+			}
+			else {
+				if (score > high_score) {
+					high_score = score;
+				}
 			}
 		}
 	}
@@ -654,6 +663,17 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 
 		}
 
+	}
+	else if (bodyA == eat) 
+		if (bodyB == ball) 
+			add_force = true;
+	else if (bodyA == fall_to_board) {
+		if (bodyB == ball) {
+			b2Filter fil;
+			fil.categoryBits = BALL;
+			fil.maskBits = BOARD;
+			ball->body->GetFixtureList()->SetFilterData(fil);
+		}
 	}
 }
 
@@ -1755,6 +1775,10 @@ bool PinballBoard::CreateTrigers()
 	tp_elephant_right_bot = App->physics->CreateRectangleSensor(413, 286, 5, 5);
 	tp_elephant_right_bot->listener = App->pinball;
 
+	eat = App->physics->CreateRectangleSensor(47, 126, 10, 10);
+	eat->listener = App->pinball;
+	fall_to_board = App->physics->CreateRectangleSensor(167, 126, 60, 30, 0.0f, LAUNCH, BALL);
+	fall_to_board->listener = App->pinball;
 
 	return true;
 }
@@ -1770,15 +1794,22 @@ void PinballBoard::Restart()
 	lose_triggered = false;
 }
 
+void PinballBoard::Reset()
+{
+	losed_balls = 0;
+	score = 0;
+	Restart();
+}
+
 
 void PinballBoard::AddScore()
 {
-	score += multip * 50;
+	score += multip * 5;
 }
 
 void PinballBoard::AddBonusScore()
 {
-	score += 750 * multip;
+	score += 75 * multip;
 }
 
 

@@ -47,6 +47,7 @@ public:
 
 
 	void Restart();
+	void Reset();
 
 
 public:
@@ -55,6 +56,7 @@ public:
 	p2List<kicker_info> right_kickers;
 	kicker_info			top_kicker;
 	launcher_info		launcher;
+	int					losed_balls = 0;
 
 private:
 	bool CreateBoardPhyisics();
@@ -181,7 +183,6 @@ private:
 
 	Sprite		balls_left;
 	Sprite		lose_ball;
-	int			losed_balls = 0;
 
 	int			orange_font;
 	int			white_font;
@@ -251,6 +252,10 @@ private:
 	bool		pinkrect1_collided = false;
 	bool		pinkrect2_collided = false;
 	bool		pinkrect3_collided = false;
+
+	PhysBody*	eat;
+	PhysBody*	fall_to_board;
+	bool		add_force = false;
 
 };
 
