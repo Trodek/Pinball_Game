@@ -41,6 +41,7 @@ PinballBoard::PinballBoard() : j1Module()
 	bonus_left_letters.rect = { 0,0,80,24 };
 	bonus_right_frame.rect = { 0,0,89,50 };
 	bonus_right_letters.rect = { 0,0,89,50 };
+	pink_puncher.rect = { 0,0,21,58 };
 	x_arrows.rect = {0,0,172,47};
 	eat_arrows.rect = {0,0,29,56};
 	tel_marks.rect = {0,0,113,96};
@@ -75,6 +76,7 @@ bool PinballBoard::Start()
 	CreateStickersCollisions();
 	CreateKickers();
 	CreateTrigers();
+	CreateBouncers();
 
 	walls.image = App->tex->Load("Sprites/Walls.png");
 	background.image = App->tex->Load("Sprites/background.png");
@@ -137,6 +139,7 @@ bool PinballBoard::Start()
 	bonus_right_frame.image = App->tex->Load("Sprites/bonus right frame.png");
 	bonus_right_letters.image = App->tex->Load("Sprites/bonus_right_leters.png");
 
+	pink_puncher.image = App->tex->Load("Sprites/rounded_pink_puncher.png");
 	x_arrows.image = App->tex->Load("Sprites/x_arrows.png");
 	eat_arrows.image = App->tex->Load("Sprites/eat_guy_arrows.png");
 	tel_marks.image = App->tex->Load("Sprites/telephone_triggers_marks.png");
@@ -155,13 +158,20 @@ bool PinballBoard::Draw()
 {
 	App->render->Blit(background.image, 0, 0, &background.rect);
 
+	App->render->Blit(pink_puncher.image, 77, 25, &pink_puncher.rect, 0.0f, 38);
+
+	App->render->Blit(pink_puncher.image, 120, -10, &pink_puncher.rect, 0.0f, 70);
+	App->render->Blit(pink_puncher.image, 180, -15, &pink_puncher.rect, 0.0f, 95);
+	App->render->Blit(pink_puncher.image, 67, 75, &pink_puncher.rect, 0.0f, 0);
+	App->render->Blit(pink_puncher.image, 210, 115, &pink_puncher.rect, 0.0f, 220);
+
 	App->render->Blit(brown_web.image, 80, 25, &brown_web.rect);
 
-	//App->render->Blit(pink_web1.image, 87, 34, &pink_web1.rect);
+	/*App->render->Blit(pink_web1.image, 87, 34, &pink_web1.rect);
 	
-	//App->render->Blit(pink_web2.image, 91, 32, &pink_web2.rect);
+	App->render->Blit(pink_web2.image, 91, 32, &pink_web2.rect);
 	
-	//App->render->Blit(pink_web3.image, 80, 25, &pink_web3.rect);
+	App->render->Blit(pink_web3.image, 80, 25, &pink_web3.rect);*/
 
 	App->render->Blit(pink_guy.image, 125, 55, &pink_guy.rect);
 
@@ -464,6 +474,7 @@ bool PinballBoard::CleanUp()
 	App->tex->UnLoad(mouth.image);
 	App->tex->UnLoad(bell.image);
 	App->tex->UnLoad(blue_flame.image);
+	App->tex->UnLoad(pink_puncher.image);
 
 	return true;
 }
@@ -1469,6 +1480,18 @@ bool PinballBoard::CreateStickersCollisions()
 	App->physics->CreateStaticCircle(273, 294, 10, 1.025f);
 	App->physics->CreateStaticCircle(291, 330, 10, 1.025f);
 	App->physics->CreateStaticCircle(321, 297, 10, 1.025f);
+	return true;
+}
+
+bool PinballBoard::CreateBouncers()
+{
+	App->physics->CreateStaticRectangle(91, 39, 21, 58, 1.025f, BOARD, BALL, 38);
+	App->physics->CreateStaticRectangle(135, 12, 21, 58, 1.025f, BOARD, BALL, 70);
+	App->physics->CreateStaticRectangle(195, 7, 21, 58, 1.025f, BOARD, BALL, 95);
+	App->physics->CreateStaticRectangle(72, 89, 21, 58, 1.025f, BOARD, BALL, 0);
+	App->physics->CreateStaticRectangle(225, 145, 18, 50, 1.025f, BOARD, BALL, 220);
+
+
 	return true;
 }
 

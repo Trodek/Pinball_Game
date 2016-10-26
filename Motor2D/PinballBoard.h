@@ -45,6 +45,7 @@ public:
 
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
+
 	void Restart();
 
 
@@ -60,14 +61,16 @@ private:
 	bool CreateStickersCollisions();
 	bool CreateKickers();
 	bool CreateTrigers();
+	bool CreateBouncers();
+
 
 	void AddScore();
 	void AddBonusScore();
 
 	void CreateBall();
-	void DrawUI() const;
 	void TeleportBall(PhysBody* tp);
 
+	void DrawUI() const;
 
 private:
 
@@ -167,6 +170,8 @@ private:
 	Sprite		left_eleph_marks;
 	Sprite		rocket_single;
 	Sprite		rocket_double;
+
+	Sprite		pink_puncher;
 
 	//UI
 	Sprite		score_right;
