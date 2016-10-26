@@ -424,7 +424,36 @@ b2MotorJoint* ModulePhysics::CreateMotorJoint(b2Body* body, b2Vec2 target)
 	return (b2MotorJoint*)world->CreateJoint(&def);
 }
 
-void ModulePhysics::DeleteJoint(b2MouseJoint* joint)
+path_joint * ModulePhysics::CreatePathJoint(b2Body * body, int * path, int path_size)
+{
+	path_joint joint;
+
+	b2Vec2* p = new b2Vec2[path_size / 2];
+
+	for (uint i = 0; i < path_size / 2; ++i)
+	{
+		p[i].x = PIXEL_TO_METERS(path[i * 2 + 0]);
+		p[i].y = PIXEL_TO_METERS(path[i * 2 + 1]);
+	}
+
+	joint.path = p;
+	joint.points = path_size / 2;
+
+	b2MouseJointDef def;
+	def.bodyA = ground;
+	def.bodyB = body;
+	def.target = p[0];
+	def.dampingRatio = 0.5f;
+	def.frequencyHz = 2.0f;
+	def.maxForce = 100.0f * body->GetMass();
+
+	b2MouseJoint* test = (b2MouseJoint*)world->CreateJoint(&def);
+	joint.joint = test;
+
+	return &joint;
+}
+
+void ModulePhysics::DeleteJoint(b2Joint* joint)
 {
 	world->DestroyJoint(joint);
 }

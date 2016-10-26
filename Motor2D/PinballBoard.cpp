@@ -235,7 +235,14 @@ bool PinballBoard::Draw()
 
 bool PinballBoard::Update(float dt)
 {
-
+	if (lefttube_triggered) {
+		iPoint ball_pos;
+		ball->GetPosition(ball_pos.x, ball_pos.y);
+		if (ball_pos.x == lefttube->path[lefttube->cur_point].x && ball_pos.y == lefttube->path[lefttube->cur_point].y && lefttube->cur_point < lefttube->points) {
+			lefttube->cur_point++;
+			lefttube->joint->SetTarget(lefttube->path[lefttube->cur_point]);
+		}
+	}
 	return true;
 }
 
@@ -320,19 +327,28 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			fil.maskBits = TOP;
 			ball->body->GetFixtureList()->SetFilterData(fil);
 			lefttube_triggered = true;
-			int x, y;
-			lefttube_triggers.start->data->GetPosition(x, y);
-			b2Vec2 target(x, y);
-			tube_run = App->physics->CreateMotorJoint(ball->body , target);
-			LOG("%d %d", x, y);
-		}
-	}
-	else if (lefttube_triggers.find(bodyA) != -1) {
-		if (bodyB == ball) {
-			int x, y;
-			lefttube_triggers[lefttube_triggers.find(bodyA) + 1]->GetPosition(x, y);
-			LOG("%d %d", x, y);
-			b2Vec2 target(0.02f*x, 0.02f*y);
+			int path[38] = {
+				50, 213,
+				45, 200,
+				61, 180,
+				59, 163,
+				22, 157,
+				19, 140,
+				66, 113,
+				65, 96,
+				42, 77,
+				49, 66,
+				107, 62,
+				111, 34,
+				135, 35,
+				147, 50,
+				161, 50,
+				177, 30,
+				197, 33,
+				211, 48,
+				254, 50
+			};
+			lefttube = App->physics->CreatePathJoint(ball->body, path, 38);
 		}
 	}
 }
@@ -1280,71 +1296,6 @@ bool PinballBoard::CreateTrigers()
 
 	trigger_lefttube = App->physics->CreateRectangleSensor(95, 212, 3, 10, 0.0f, BOARD, BALL, 39);
 	trigger_lefttube->listener = App->pinball;
-
-	PhysBody* aux;
-	aux = App->physics->CreateRectangleSensor(90, 198, 1, 1, 0.0f, TOP, BALL, 0);
-	aux->listener = App->pinball;
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(107, 176, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(104, 164, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(65, 154, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(65, 138, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(108, 115, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(108, 96, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(87, 78, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(100, 64, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(148, 64, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(155, 57, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(161, 34, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(182, 39, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(197, 50, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(210, 45, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(226, 31, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(246, 33, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(254, 47, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	aux = App->physics->CreateRectangleSensor(303, 50, 1, 1, 0.0f, TOP, BALL, 0);
-	lefttube_triggers.add(aux);
-
-	trigger_lose_left = App->physics->CreateRectangleSensor(170, 500, 90, 5, 0.0f, BOARD, BALL);
-	trigger_lose_left->listener = App->pinball;
-
-	trigger_lose_right = App->physics->CreateRectangleSensor(415, 500, 90, 5, 0.0f, BOARD, BALL);
-	trigger_lose_right->listener = App->pinball;
 
 	return true;
 }

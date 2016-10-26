@@ -13,6 +13,13 @@
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
+struct path_joint {
+	b2MouseJoint* joint;
+	b2Vec2* path;
+	int points = 0;
+	int cur_point = 0;
+};
+
 enum Layers {
 	LAUNCH = 1, BOARD, KICKERS = 4, BALL, TOP = 8,  //DONT KNOW WHY WITH OTHER NUMBERS DONT WORK
 };
@@ -63,7 +70,9 @@ public:
 	b2PrismaticJoint* CreatePrismaticJoint(PhysBody* anchor,PhysBody* body, iPoint anchor_offset, iPoint body_offset, bool enable_limit, float max_trans, float min_trans, bool enable_motor, int motor_speed, int max_force);
 	b2MotorJoint* CreateMotorJoint(b2Body* body, b2Vec2 target);
 
-	void DeleteJoint(b2MouseJoint* joint);
+	path_joint* CreatePathJoint(b2Body* body, int *path, int path_size);
+
+	void DeleteJoint(b2Joint* joint);
 
 	void SetGround(b2Body* body) {
 		ground = body;

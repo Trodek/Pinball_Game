@@ -8,6 +8,7 @@ class PhysBody;
 class b2RevoluteJoint;
 class b2PrismaticJoint;
 class b2MotorJoint;
+struct path_joint;
 
 struct kicker_info {
 	PhysBody* anchor;
@@ -113,10 +114,9 @@ private:
 	PhysBody*	trigger_lose_right;
 
 	bool		lose_triggered = false;
-	bool		lefttube_triggered;
 
-	p2List<PhysBody*>	lefttube_triggers;
-	b2MotorJoint*		tube_run;
+	bool		lefttube_triggered = false;
+	path_joint*	lefttube;
 
 	Sprite		pink_guy;
 	Sprite		brown_web;
