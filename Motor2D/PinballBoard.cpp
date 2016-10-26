@@ -153,6 +153,14 @@ bool PinballBoard::Start()
 
 	App->audio->PlayMusic("Sounds/song.ogg");
 	hit_sound = App->audio->LoadFx("Sounds/sound 527 (Bump - Body Hit 04).ogg");
+	tel_sound = App->audio->LoadFx("Sounds/sound 530 (chatter_target_hit).ogg");
+	tp_sound = App->audio->LoadFx("Sounds/sound 161 (oh why me).ogg");
+	bonus_sound = App->audio->LoadFx("Sounds/sound 522 (happy_stars_anim).ogg");
+	taco_sound = App->audio->LoadFx("Sounds/sound 521 (tickle_arms_animation).ogg");
+	choco_sound = App->audio->LoadFx("Sounds/sound 140 (chocolate cake).ogg");
+	gm_sound = App->audio->LoadFx("Sounds/sound 65 (good_morning_dillydale).ogg");
+	loseball_sound = App->audio->LoadFx("Sounds/sound 542 (balll_goes_out_of_play).ogg");
+	eat_sound = App->audio->LoadFx("Sounds/sound 514 (greedy_gulp).ogg");
 
 	return true;
 }
@@ -577,6 +585,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 				if (!lose_triggered) {
 					losed_balls++;
 					lose_triggered = true;
+					App->audio->PlayFx(loseball_sound);
 				}
 				else
 					Restart();
@@ -616,31 +625,37 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 	else if (bodyA == tp_left) {
 		if (bodyB == ball) {
 			to_tp = tp_right;
+			App->audio->PlayFx(tp_sound);
 		}
 	}
 	else if (bodyA == tp_right) {
 		if (bodyB == ball) {
 			to_tp = tp_left;
+			App->audio->PlayFx(tp_sound);
 		}
 	}
 	else if (bodyA == tp_elephant_left_top) {
 		if (bodyB == ball) {
 			to_tp = tp_elephant_left_bot;
+			App->audio->PlayFx(tp_sound);
 		}
 	}
 	else if (bodyA == tp_elephant_left_bot) {
 		if (bodyB == ball) {
 			to_tp = tp_elephant_left_top;
+			App->audio->PlayFx(tp_sound);
 		}
 	}
 	else if (bodyA == tp_elephant_right_top) {
 		if (bodyB == ball) {
 			to_tp = tp_elephant_right_bot;
+			App->audio->PlayFx(tp_sound);
 		}
 	}
 	else if (bodyA == tp_elephant_right_bot) {
 		if (bodyB == ball) {
 			to_tp = tp_elephant_right_top;
+			App->audio->PlayFx(tp_sound);
 		}
 	}
 	else if (bodyA == stick1 || bodyA == stick2 || bodyA == stick3 || bodyA == stick4 || bodyA == stick5 || bodyA == stick6 || bodyA == stick7 || bodyA == stick8 || bodyA == stick9) {
@@ -657,6 +672,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 		|| bodyA == rectangle17 || bodyA == rectangle18 || bodyA == rectangle19 || bodyA == rectangle20 || bodyA == rectangle21 || bodyA == rectangle22 || bodyA == rectangle23) {
 		if (bodyB == ball) {
 			AddScore();
+			App->audio->PlayFx(hit_sound);
 			if (bodyA == rectangle1 || bodyA == rectangle3 || bodyA == rectangle5) {
 				pinkrect1_collided = true;
 				pinkrect_time_start = count;
@@ -669,14 +685,26 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 				pinkrect3_collided = true;
 				pinkrect_time_start = count;
 			}
-
+			if(bodyA == rectangle8 || bodyA == rectangle9 || bodyA == rectangle10)
+				App->audio->PlayFx(tel_sound);
+			if (bodyA == rectangle11 || bodyA == rectangle12) {
+				App->audio->PlayFx(choco_sound);
+			}
+			if (bodyA == rectangle18 || bodyA == rectangle19) {
+				App->audio->PlayFx(taco_sound);
+			}
+			if (bodyA == rectangle16 || bodyA == rectangle17) {
+				App->audio->PlayFx(gm_sound);
+			}
 		}
 
 	}
 	else if (bodyA == eat) 
-		if (bodyB == ball) 
+		if (bodyB == ball) {
 			add_force = true;
 			flight_time_start = count;
+			App->audio->PlayFx(eat_sound);
+		}
 }
 
 bool PinballBoard::CreateBoardPhyisics()
@@ -1591,29 +1619,29 @@ bool PinballBoard::CreateStickersCollisions()
 
 bool PinballBoard::CreateBouncers()
 {
-	rectangle1 = App->physics->CreateStaticRectangle(91, 39, 21, 58, 1.025f, BOARD, BALL, 38);
+	rectangle1 = App->physics->CreateStaticRectangle(91, 39, 21, 58, 1.025f, BOARD, BALL, 38);		//pink trigger
 	rectangle1->listener = App->pinball;
-	rectangle2 = App->physics->CreateStaticRectangle(135, 12, 21, 58, 1.025f, BOARD, BALL, 70);
+	rectangle2 = App->physics->CreateStaticRectangle(135, 12, 21, 58, 1.025f, BOARD, BALL, 70);		//pink trigger
 	rectangle2->listener = App->pinball;
-	rectangle3 = App->physics->CreateStaticRectangle(195, 7, 21, 58, 1.025f, BOARD, BALL, 95);
+	rectangle3 = App->physics->CreateStaticRectangle(195, 7, 21, 58, 1.025f, BOARD, BALL, 95);		//pink trigger
 	rectangle3->listener = App->pinball;
-	rectangle4 = App->physics->CreateStaticRectangle(72, 89, 21, 58, 1.025f, BOARD, BALL, 0);
+	rectangle4 = App->physics->CreateStaticRectangle(72, 89, 21, 58, 1.025f, BOARD, BALL, 0);		//pink trigger
 	rectangle4->listener = App->pinball;
-	rectangle5 = App->physics->CreateStaticRectangle(224, 150, 18, 50, 1.025f, BOARD, BALL, 220);
+	rectangle5 = App->physics->CreateStaticRectangle(224, 150, 18, 50, 1.025f, BOARD, BALL, 220);	//pink trigger
 	rectangle5->listener = App->pinball;
-	rectangle6 = App->physics->CreateStaticRectangle(110, 165, 18, 50, 1.025f, BOARD, BALL, 150);
+	rectangle6 = App->physics->CreateStaticRectangle(110, 165, 18, 50, 1.025f, BOARD, BALL, 150);	//pink trigger
 	rectangle6->listener = App->pinball;
-	rectangle7 = App->physics->CreateStaticRectangle(80, 130, 18, 50, 1.025f, BOARD, BALL, 130);
+	rectangle7 = App->physics->CreateStaticRectangle(80, 130, 18, 50, 1.025f, BOARD, BALL, 130);	//pink trigger
 	rectangle7->listener = App->pinball;
-	rectangle8 = App->physics->CreateStaticRectangle(460, 80, 3, 15, 1.025f, BOARD, BALL, -20);
+	rectangle8 = App->physics->CreateStaticRectangle(460, 80, 3, 15, 1.025f, BOARD, BALL, -20);		//phone
 	rectangle8->listener = App->pinball;
-	rectangle9 = App->physics->CreateStaticRectangle(465, 98, 3, 15, 1.025f, BOARD, BALL, -10);
+	rectangle9 = App->physics->CreateStaticRectangle(465, 98, 3, 15, 1.025f, BOARD, BALL, -10);		//phone
 	rectangle9->listener = App->pinball;
-	rectangle10 = App->physics->CreateStaticRectangle(465, 117, 3, 15, 1.025f, BOARD, BALL, 10);
+	rectangle10 = App->physics->CreateStaticRectangle(465, 117, 3, 15, 1.025f, BOARD, BALL, 10);	//phone
 	rectangle10->listener = App->pinball;
-	rectangle11 = App->physics->CreateStaticRectangle(445, 265, 3, 15, 1.025f, BOARD, BALL, 30);
+	rectangle11 = App->physics->CreateStaticRectangle(445, 265, 3, 15, 1.025f, BOARD, BALL, 30);	//purple girl
 	rectangle11->listener = App->pinball;
-	rectangle12 = App->physics->CreateStaticRectangle(435, 280, 3, 15, 1.025f, BOARD, BALL, 30);
+	rectangle12 = App->physics->CreateStaticRectangle(435, 280, 3, 15, 1.025f, BOARD, BALL, 30);	//purple girl
 	rectangle12->listener = App->pinball;
 	rectangle13 = App->physics->CreateStaticRectangle(340, 354, 3, 15, 1.025f, BOARD, BALL, 45);
 	rectangle13->listener = App->pinball;
@@ -1623,13 +1651,13 @@ bool PinballBoard::CreateBouncers()
 	rectangle15->listener = App->pinball;
 	rectangle15 = App->physics->CreateStaticRectangle(145, 265, 3, 15, 1.025f, BOARD, BALL, -30);
 	rectangle15->listener = App->pinball;
-	rectangle16 = App->physics->CreateStaticRectangle(370, 137, 3, 15, 1.025f, BOARD, BALL, -30);
+	rectangle16 = App->physics->CreateStaticRectangle(370, 137, 3, 15, 1.025f, BOARD, BALL, -30); //left tel trigger
 	rectangle16->listener = App->pinball;
-	rectangle17 = App->physics->CreateStaticRectangle(385, 150, 3, 15, 1.025f, BOARD, BALL, -50);
+	rectangle17 = App->physics->CreateStaticRectangle(385, 150, 3, 15, 1.025f, BOARD, BALL, -50); //left tel trigger
 	rectangle17->listener = App->pinball;
-	rectangle18 = App->physics->CreateStaticRectangle(480, 195, 3, 15, 1.025f, BOARD, BALL, -30);
+	rectangle18 = App->physics->CreateStaticRectangle(480, 195, 3, 15, 1.025f, BOARD, BALL, -30);	//rocket
 	rectangle18->listener = App->pinball;
-	rectangle19 = App->physics->CreateStaticRectangle(491, 213, 3, 15, 1.025f, BOARD, BALL, -30);
+	rectangle19 = App->physics->CreateStaticRectangle(491, 213, 3, 15, 1.025f, BOARD, BALL, -30);	//rocket
 	rectangle19->listener = App->pinball;
 	rectangle20 = App->physics->CreateStaticRectangle(123, 410, 3, 60, 1.05f, BOARD, BALL, -30);
 	rectangle20->listener = App->pinball;

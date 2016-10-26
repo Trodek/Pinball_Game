@@ -259,6 +259,14 @@ private:
 	bool		add_force = false;
 	bool		fling = false;
 
+	uint tel_sound;
+	uint tp_sound;
+	uint bonus_sound;
+	uint taco_sound;
+	uint choco_sound;
+	uint gm_sound;
+	uint loseball_sound;
+	uint eat_sound;
 };
 
 #endif // !_PinballBoard_
