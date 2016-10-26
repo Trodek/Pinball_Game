@@ -221,7 +221,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			ball->body->GetFixtureList()->SetFilterData(fil);
 		}
 	}
-	if (bodyA == x_lefttop_toTOP || bodyA == x_righttop_toTOP || bodyA == x_rightbot_toTOP || bodyA == x_leftbot_toTOP) {
+	else if (bodyA == x_lefttop_toTOP || bodyA == x_righttop_toTOP || bodyA == x_rightbot_toTOP || bodyA == x_leftbot_toTOP) {
 		if (bodyB == ball) {
 			b2Filter fil;
 			fil.categoryBits = BALL;
@@ -229,7 +229,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			ball->body->GetFixtureList()->SetFilterData(fil);
 		}
 	}
-	if (bodyA == x_lefttop_toBOARD || bodyA == x_righttop_toBOARD || bodyA == x_rightbot_toBOARD || bodyA == x_leftbot_toBOARD) {
+	else if (bodyA == x_lefttop_toBOARD || bodyA == x_righttop_toBOARD || bodyA == x_rightbot_toBOARD || bodyA == x_leftbot_toBOARD) {
 		if (bodyB == ball) {
 			b2Filter fil;
 			fil.categoryBits = BALL;
@@ -237,12 +237,35 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			ball->body->GetFixtureList()->SetFilterData(fil);
 		}
 	}
-	if (bodyA == tolaunch_triger) {
+	else if (bodyA == tolaunch_triger) {
 		if (bodyB == ball) {
 			b2Filter fil;
 			fil.categoryBits = BALL;
 			fil.maskBits = LAUNCH;
 			ball->body->GetFixtureList()->SetFilterData(fil);
+		}
+	}
+	else if (bodyA == trigger_lefttube) {
+		if (bodyB == ball) {
+			b2Filter fil;
+			fil.categoryBits = BALL;
+			fil.maskBits = TOP;
+			ball->body->GetFixtureList()->SetFilterData(fil);
+			lefttube_triggered = true;
+			int x, y;
+			lefttube_triggers.start->data->GetPosition(x, y);
+			b2Vec2 target(x, y);
+			tube_run = App->physics->CreateMouseJoint(ball->body , target);
+			LOG("%d %d", x, y);
+		}
+	}
+	else if (lefttube_triggers.find(bodyA) != -1) {
+
+		if (bodyB == ball) {
+			int x, y;
+			lefttube_triggers[lefttube_triggers.find(bodyA) + 1]->GetPosition(x, y);
+			b2Vec2 target(x, y);
+			tube_run->SetTarget(target);
 		}
 	}
 }
@@ -726,7 +749,7 @@ bool PinballBoard::CreateBoardPhyisics()
 		App->physics->CreateStaticChain(0, 0, right_bot, size);
 	}
 
-	
+	lefttube_triggered = false;
 
 	//right separators between right foot and telephone
 	{										
@@ -873,6 +896,140 @@ bool PinballBoard::CreateBoardPhyisics()
 	};
 	size = 20;
 	App->physics->CreateStaticChain(0, 0, launcher_tub, size, 0.0f, LAUNCH, BALL);
+	
+	int left_tube[256] = {
+		100, 190,
+		53, 203,
+		54, 199,
+		69, 184,
+		71, 176,
+		71, 168,
+		68, 161,
+		62, 156,
+		55, 152,
+		33, 150,
+		29, 149,
+		26, 146,
+		27, 143,
+		31, 139,
+		42, 134,
+		56, 128,
+		66, 122,
+		71, 117,
+		75, 110,
+		76, 103,
+		75, 97,
+		72, 91,
+		67, 86,
+		62, 82,
+		58, 79,
+		52, 76,
+		55, 73,
+		64, 72,
+		77, 73,
+		94, 73,
+		103, 72,
+		112, 68,
+		117, 62,
+		119, 56,
+		119, 41,
+		126, 40,
+		130, 42,
+		133, 46,
+		136, 50,
+		139, 54,
+		145, 58,
+		151, 59,
+		159, 59,
+		165, 56,
+		171, 50,
+		175, 45,
+		180, 39,
+		185, 38,
+		192, 40,
+		197, 43,
+		202, 49,
+		207, 54,
+		214, 57,
+		225, 58,
+		236, 77,
+		272, 78,
+		281, 58,
+		282, 41,
+		268, 21,
+		246, 17,
+		231, 26,
+		225, 37,
+		224, 42,
+		220, 42,
+		214, 38,
+		208, 32,
+		202, 27,
+		193, 22,
+		186, 21,
+		180, 21,
+		174, 22,
+		170, 25,
+		165, 30,
+		161, 35,
+		158, 39,
+		156, 41,
+		152, 42,
+		148, 38,
+		145, 33,
+		140, 29,
+		134, 25,
+		127, 23,
+		119, 23,
+		113, 24,
+		106, 27,
+		102, 34,
+		102, 40,
+		102, 48,
+		101, 54,
+		94, 55,
+		88, 56,
+		82, 56,
+		74, 55,
+		67, 55,
+		59, 55,
+		50, 57,
+		42, 61,
+		38, 65,
+		36, 70,
+		35, 79,
+		38, 86,
+		44, 91,
+		51, 95,
+		56, 99,
+		59, 103,
+		58, 108,
+		53, 112,
+		42, 117,
+		29, 122,
+		22, 126,
+		15, 131,
+		12, 136,
+		10, 143,
+		10, 152,
+		17, 160,
+		22, 165,
+		29, 167,
+		42, 168,
+		50, 168,
+		54, 172,
+		53, 177,
+		48, 182,
+		45, 187,
+		40, 192,
+		38, 198,
+		38, 203,
+		40, 209,
+		20, 290
+	};
+	size = 256;
+	App->physics->CreateStaticChain(43, 0, left_tube, size, 0.0f, TOP, BALL);
+
 
 	// Middle X
 	{
@@ -892,8 +1049,8 @@ bool PinballBoard::CreateBoardPhyisics()
 			148, 8,
 			161, 6,
 			173, 5,
-			207, 5,
-			207, 30,
+			234, 5,
+			234, 35,
 			188, 25,
 			181, 26,
 			168, 31,
@@ -905,8 +1062,8 @@ bool PinballBoard::CreateBoardPhyisics()
 			185, 81,
 			193, 91,
 			205, 108,
-			233, 113,
-			160, 187,
+			266, 117,
+			164, 221,
 			160, 154,
 			146, 128,
 			137, 113,
@@ -918,10 +1075,10 @@ bool PinballBoard::CreateBoardPhyisics()
 			76, 112,
 			65, 130,
 			51, 158,
-			59, 188,
-			-7, 118,
-			16, 96,
-			25, 85,
+			48, 220,
+			-53, 118,
+			2, 109,
+			23, 85,
 			38, 70,
 			51, 57,
 			67, 44,
@@ -929,10 +1086,10 @@ bool PinballBoard::CreateBoardPhyisics()
 			62, 39,
 			50, 33,
 			40, 29,
-			29, 26,
+			31, 27,
 			22, 25,
-			9, 27,
-			9, 3
+			-18, 30,
+			-18, 4
 		};
 		size = 112;
 		App->physics->CreateStaticChain(190, 173, midle_x, size, 0.0f, TOP, BALL);
@@ -1035,25 +1192,93 @@ bool PinballBoard::CreateTrigers()
 	tolaunch_triger = App->physics->CreateRectangleSensor(295, 157, 32, 1);
 	tolaunch_triger->listener = App->pinball;
 
-	x_lefttop_toTOP = App->physics->CreateRectangleSensor(214, 189, 1, 10);
+	x_lefttop_toTOP = App->physics->CreateRectangleSensor(216, 189, 3, 10);
 	x_lefttop_toTOP->listener = App->pinball;
-	x_lefttop_toBOARD = App->physics->CreateRectangleSensor(210, 189, 1, 10, 0.0f, TOP);
+	x_lefttop_toBOARD = App->physics->CreateRectangleSensor(210, 189, 3, 10, 0.0f, TOP);
 	x_lefttop_toBOARD->listener = App->pinball;
 
-	x_righttop_toTOP = App->physics->CreateRectangleSensor(374, 189, 1, 10);
+	x_righttop_toTOP = App->physics->CreateRectangleSensor(372, 189, 3, 10);
 	x_righttop_toTOP->listener = App->pinball;
-	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 1, 10, 0.0f, TOP);
+	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 3, 10, 0.0f, TOP);
 	x_righttop_toBOARD->listener = App->pinball;
 
-	x_rightbot_toTOP = App->physics->CreateRectangleSensor(370, 302, 1, 60, 0.0f, BOARD, BALL, 40);
+	x_rightbot_toTOP = App->physics->CreateRectangleSensor(377, 312, 3, 70, 0.0f, BOARD, BALL, 40);
 	x_rightbot_toTOP->listener = App->pinball;
-	x_rightbot_toBOARD = App->physics->CreateRectangleSensor(373, 305, 1, 60, 0.0f, TOP, BALL, 40);
+	x_rightbot_toBOARD = App->physics->CreateRectangleSensor(381, 319, 3, 80, 0.0f, TOP, BALL, 40);
 	x_rightbot_toBOARD->listener = App->pinball;
 
-	x_leftbot_toTOP = App->physics->CreateRectangleSensor(217, 302, 1, 60, 0.0f, BOARD, BALL, -40);
+	x_leftbot_toTOP = App->physics->CreateRectangleSensor(210, 313, 3, 70, 0.0f, BOARD, BALL, -40);
 	x_leftbot_toTOP->listener = App->pinball;
-	x_leftbot_toBOARD = App->physics->CreateRectangleSensor(215, 305, 1, 60, 0.0f, TOP, BALL, -40);
+	x_leftbot_toBOARD = App->physics->CreateRectangleSensor(206, 319, 3, 90, 0.0f, TOP, BALL, -40);
 	x_leftbot_toBOARD->listener = App->pinball;
+
+	trigger_lefttube = App->physics->CreateRectangleSensor(95, 212, 3, 10, 0.0f, BOARD, BALL, 39);
+	trigger_lefttube->listener = App->pinball;
+
+	PhysBody* aux;
+	aux = App->physics->CreateRectangleSensor(90, 198, 3, 3,0.0f, TOP, BALL, 0);
+	aux->listener = App->pinball;
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(107, 176, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(104, 164, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(65, 154, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(65, 138, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(108, 115, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(108, 96, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(87, 78, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(100, 64, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(148, 64, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(155, 57, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(161, 34, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(182, 39, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(197, 50, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(210, 45, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(226, 31, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(246, 33, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(254, 47, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	aux = App->physics->CreateRectangleSensor(303, 50, 3, 3,0.0f, TOP, BALL, 0);
+	lefttube_triggers.add(aux);
+
+	for (p2List_item<PhysBody*>* item = lefttube_triggers.start; item != NULL; item = item->next) {
+		int x, y;
+		item->data->GetPosition(x, y);
+		LOG("%d %d", x, y);
+	}
 
 	return true;
 }

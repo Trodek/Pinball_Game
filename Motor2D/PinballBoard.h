@@ -7,6 +7,7 @@ struct Sprite;
 class PhysBody;
 class b2RevoluteJoint;
 class b2PrismaticJoint;
+class b2MouseJoint;
 
 struct kicker_info {
 	PhysBody* anchor;
@@ -97,6 +98,12 @@ private:
 	PhysBody*	x_lefttop_toBOARD;
 	PhysBody*	x_leftbot_toBOARD;
 	PhysBody*	x_rightbot_toBOARD;
+	PhysBody*	trigger_lefttube;
+
+	bool		lefttube_triggered;
+
+	p2List<PhysBody*>	lefttube_triggers;
+	b2MouseJoint*		tube_run;
 
 	Sprite		pink_guy;
 	Sprite		brown_web;
