@@ -20,7 +20,9 @@ PinballBoard::PinballBoard() : j1Module()
 	bluesticker.rect = { 0,0,37,34 };
 	greysticker.rect = { 0,0,28,28 };
 	right_kicker.rect  = left_kicker.rect = { 0,0,54,26 };
-	right_puncher.rect = { 0,0,67,79 };
+	right_puncher_y.rect = right_puncher_o.rect = left_puncher_o.rect = left_puncher_y.rect = { 0,0,67,79 };
+	teleport.rect = { 0,0,21,21 };
+	mouth.rect = { 0,0,21,21 };
 	x_sprite.rect = { 0,0,211,167 };
 	top_kiker_sprite.rect = { 0,0,26,54 };
 	score_left.rect = score_right.rect = { 0,0,81,35 };
@@ -31,6 +33,10 @@ PinballBoard::PinballBoard() : j1Module()
 	balls_left.rect = { 0,0,42,35 };
 	lose_ball.rect = { 0,0,16,16 };
 	mill_sprite.rect = { 0,0,57,13 };
+	tunnel.rect = { 0,0,530,244 };
+	bonus_girl.rect = { 0,0,106,80 };
+	bell.rect = { 0,0,51,51 };
+	blue_flame.rect = { 0,0,32,32 };
 }
 
 // Destructor
@@ -73,7 +79,11 @@ bool PinballBoard::Start()
 	right_kicker.image = App->tex->Load("Sprites/right_kicker.png");
 	top_kiker_sprite.image = App->tex->Load("Sprites/top_kicker.png");
 
-	right_puncher.image = App->tex->Load("Sprites/right_puncher.png");
+	right_puncher_o.image = App->tex->Load("Sprites/right_puncher_o.png");
+	left_puncher_o.image = App->tex->Load("Sprites/left_puncher_o.png");
+
+	right_puncher_y.image = App->tex->Load("Sprites/right_puncher_y.png");
+	left_puncher_y.image = App->tex->Load("Sprites/left_puncher_y.png");
 
 	x_sprite.image = App->tex->Load("Sprites/midle_x.png");
 
@@ -91,12 +101,24 @@ bool PinballBoard::Start()
 	pink_web2.image = App->tex->Load("Sprites/pink_web2.png");
 	pink_web3.image = App->tex->Load("Sprites/pink_web3.png");
 
+	blue_flame.image = App->tex->Load("Sprites/blue_flame.png");
+
+	bonus_girl.image = App->tex->Load("Sprites/bonus_girl.png");
+
 	launcher_sprite.image = App->tex->Load("Sprites/launcher.png");
 
 	balls_left.image = App->tex->Load("Sprites/balls_ui.png");
 	lose_ball.image = App->tex->Load("Sprites/miss_ball.png");
 
+	teleport.image = App->tex->Load("Sprites/teleport.png");
+
+	tunnel.image = App->tex->Load("Sprites/tunnel.png");
+
 	mill_sprite.image = App->tex->Load("Sprites/mill.png");
+
+	mouth.image = App->tex->Load("Sprites/mouth.png");
+
+	bell.image = App->tex->Load("Sprites/bell.png");
 
 	return true;
 }
@@ -122,12 +144,35 @@ bool PinballBoard::Draw()
 	launch_pos.y -= launcher.body->height / 2;
 	App->render->Blit(launcher_sprite.image, launch_pos.x-3, launch_pos.y, &launcher_sprite.rect);
 
+	p2List_item<kicker_info>* lkick = left_kickers.start;
+	while (lkick != NULL)
+	{
+		int kick_x, kick_y;
+		lkick->data.anchor->GetPosition(kick_x, kick_y);
+		App->render->Blit(left_kicker.image, kick_x, kick_y - left_kicker.rect.h / 4 , &left_kicker.rect, 1.0f, lkick->data.body->GetRotation(), 9, left_kicker.rect.h / 2);
+
+		lkick = lkick->next;
+	}
+
+	p2List_item<kicker_info>* rkick = right_kickers.start;
+	while (rkick != NULL)
+	{
+		int kick_x, kick_y;
+		rkick->data.anchor->GetPosition(kick_x, kick_y);
+		App->render->Blit(right_kicker.image, kick_x - 43, kick_y - 10, &right_kicker.rect, 1.0f, rkick->data.body->GetRotation(), 90, right_kicker.rect.h / 2);
+
+		rkick = rkick->next;
+	}
+
+	App->render->Blit(bonus_girl.image, 125, 385, &bonus_girl.rect);
+
 	int ball_x, ball_y;
 	ball->GetPosition(ball_x, ball_y);
 	if (ball->body->GetFixtureList()->GetFilterData().maskBits == TOP) {
 		App->render->Blit(walls.image, 0, 0, &walls.rect);
-
 		App->render->Blit(x_sprite.image, 190, 173, &x_sprite.rect);
+
+		App->render->Blit(tunnel.image, 43, 0, &tunnel.rect);
 
 		App->render->Blit(bluesticker.image, 274, 315, &bluesticker.rect); //blue stickers
 		App->render->Blit(bluesticker.image, 256, 279, &bluesticker.rect);
@@ -142,6 +187,8 @@ bool PinballBoard::Draw()
 		App->render->Blit(walls.image, 0, 0, &walls.rect);
 		App->render->Blit(x_sprite.image, 190, 173, &x_sprite.rect);
 
+		App->render->Blit(tunnel.image, 43, 0, &tunnel.rect);
+
 		App->render->Blit(bluesticker.image, 274, 315, &bluesticker.rect); //blue stickers
 		App->render->Blit(bluesticker.image, 256, 279, &bluesticker.rect);
 		App->render->Blit(bluesticker.image, 250, 243, &bluesticker.rect);
@@ -151,25 +198,7 @@ bool PinballBoard::Draw()
 
 	App->render->Blit(mill_sprite.image, 265, 380, &mill_sprite.rect, 1.0f, mill.body->GetRotation(), 57, 16);
 
-	p2List_item<kicker_info>* lkick = left_kickers.start;
-	while (lkick != NULL)
-	{
-		int kick_x, kick_y;
-		lkick->data.anchor->GetPosition(kick_x, kick_y);
-		App->render->Blit(left_kicker.image, kick_x, kick_y - left_kicker.rect.h / 4, &left_kicker.rect, 1.0f, lkick->data.body->GetRotation(), 9, left_kicker.rect.h / 2);
-
-		lkick = lkick->next;
-	}
-
-	p2List_item<kicker_info>* rkick = right_kickers.start;
-	while (rkick != NULL)
-	{
-		int kick_x, kick_y;
-		rkick->data.anchor->GetPosition(kick_x, kick_y);
-		App->render->Blit(right_kicker.image, kick_x - 40, kick_y - 12, &right_kicker.rect, 1.0f, rkick->data.body->GetRotation(), 53, right_kicker.rect.h / 2);
-
-		rkick = rkick->next;
-	}
+	App->render->Blit(bell.image, 269, 158, &bell.rect);
 
 	int kick_x, kick_y;
 	top_kicker.anchor->GetPosition(kick_x, kick_y);
@@ -181,6 +210,23 @@ bool PinballBoard::Draw()
 
 	App->render->Blit(greysticker.image, 144, 88, &greysticker.rect);  // grey sticker
 
+	App->render->Blit(right_puncher_y.image, 209, 374, &right_puncher_y.rect);	//yellow punchers
+	App->render->Blit(left_puncher_y.image, 87, 374, &left_puncher_y.rect);
+
+	App->render->Blit(right_puncher_o.image, 442, 372, &right_puncher_o.rect);	//orange punchers
+	App->render->Blit(left_puncher_o.image, 316, 374, &left_puncher_o.rect);
+
+	App->render->Blit(teleport.image, 166, 228, &teleport.rect);
+	App->render->Blit(teleport.image, 166, 276, &teleport.rect);
+	App->render->Blit(teleport.image, 403, 228, &teleport.rect);
+	App->render->Blit(teleport.image, 403, 276, &teleport.rect);
+	App->render->Blit(teleport.image, 47, 316, &teleport.rect);
+	App->render->Blit(teleport.image, 524, 316, &teleport.rect);
+
+	App->render->Blit(mouth.image, 38, 113, &mouth.rect);
+
+	App->render->Blit(blue_flame.image, 451, 194, &blue_flame.rect);
+	App->render->Blit(blue_flame.image, 463, 210, &blue_flame.rect);
 
 	DrawUI();
 
@@ -205,8 +251,17 @@ bool PinballBoard::CleanUp()
 	App->tex->UnLoad(greysticker.image);
 	App->tex->UnLoad(bluesticker.image);
 	App->tex->UnLoad(yellowsticker.image);
-	App->tex->UnLoad(right_puncher.image);
+	App->tex->UnLoad(right_puncher_o.image);
+	App->tex->UnLoad(right_puncher_y.image);
+	App->tex->UnLoad(left_puncher_o.image);
+	App->tex->UnLoad(left_puncher_y.image);
 	App->tex->UnLoad(top_kiker_sprite.image);
+	App->tex->UnLoad(teleport.image);
+	App->tex->UnLoad(tunnel.image);
+	App->tex->UnLoad(bonus_girl.image);
+	App->tex->UnLoad(mouth.image);
+	App->tex->UnLoad(bell.image);
+	App->tex->UnLoad(blue_flame.image);
 
 	return true;
 }
@@ -243,6 +298,19 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			fil.categoryBits = BALL;
 			fil.maskBits = LAUNCH;
 			ball->body->GetFixtureList()->SetFilterData(fil);
+		}
+	}
+	else if (bodyA == trigger_lose_left || bodyA == trigger_lose_right) {
+		if (bodyB == ball) {
+			LOG("%d", losed_balls);
+			if (losed_balls < 3) {
+				if (!lose_triggered) {
+					losed_balls++;
+					lose_triggered = true;
+				}
+				else
+					Restart();
+			}
 		}
 	}
 	else if (bodyA == trigger_lefttube) {
@@ -1183,7 +1251,6 @@ bool PinballBoard::CreateKickers()
 	return true;
 }
 
-
 bool PinballBoard::CreateTrigers()
 {
 	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 1, 0.0f, LAUNCH);
@@ -1274,13 +1341,19 @@ bool PinballBoard::CreateTrigers()
 	aux = App->physics->CreateRectangleSensor(303, 50, 3, 3,0.0f, TOP, BALL, 0);
 	lefttube_triggers.add(aux);
 
-	for (p2List_item<PhysBody*>* item = lefttube_triggers.start; item != NULL; item = item->next) {
-		int x, y;
-		item->data->GetPosition(x, y);
-		LOG("%d %d", x, y);
-	}
+	trigger_lose_left = App->physics->CreateRectangleSensor(170, 500, 90, 5, 0.0f, BOARD, BALL);
+	trigger_lose_left->listener = App->pinball;
+
+	trigger_lose_right = App->physics->CreateRectangleSensor(415, 500, 90, 5, 0.0f, BOARD, BALL);
+	trigger_lose_right->listener = App->pinball;
 
 	return true;
+}
+
+void PinballBoard::Restart()
+{
+	CreateBall();
+	lose_triggered = false;
 }
 
 void PinballBoard::DrawUI()

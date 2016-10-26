@@ -58,6 +58,7 @@ private:
 	bool CreateStickersCollisions();
 	bool CreateKickers();
 	bool CreateTrigers();
+	void Restart();
 
 	void DrawUI();
 
@@ -81,8 +82,17 @@ private:
 	Sprite		right_kicker;
 	Sprite		top_kiker_sprite;
 
-	Sprite		right_puncher;
-	Sprite		left_puncher;
+	Sprite		right_puncher_o;
+	Sprite		left_puncher_o;
+
+	Sprite		left_puncher_y;
+	Sprite		right_puncher_y;
+
+	Sprite		teleport;
+
+	Sprite		tunnel;
+
+	Sprite		bonus_girl;
 
 	Sprite		x_sprite;
 
@@ -99,7 +109,10 @@ private:
 	PhysBody*	x_leftbot_toBOARD;
 	PhysBody*	x_rightbot_toBOARD;
 	PhysBody*	trigger_lefttube;
+	PhysBody*	trigger_lose_left;
+	PhysBody*	trigger_lose_right;
 
+	bool		lose_triggered = false;
 	bool		lefttube_triggered;
 
 	p2List<PhysBody*>	lefttube_triggers;
@@ -110,6 +123,12 @@ private:
 	Sprite		pink_web1;
 	Sprite		pink_web2;
 	Sprite		pink_web3;
+
+	Sprite		bell;
+
+	Sprite		mouth;
+
+	Sprite		blue_flame;
 
 	kicker_info mill;
 	Sprite		mill_sprite;
