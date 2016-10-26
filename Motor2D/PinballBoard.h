@@ -145,6 +145,12 @@ private:
 	kicker_info mill;
 	Sprite		mill_sprite;
 
+	Sprite		bonus_left_letters;
+	Sprite		bonus_left_frame;
+
+	Sprite		bonus_right_letters;
+	Sprite		bonus_right_frame;
+
 	//UI
 	Sprite		score_right;
 	Sprite		score_left;

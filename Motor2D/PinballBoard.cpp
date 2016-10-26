@@ -37,6 +37,10 @@ PinballBoard::PinballBoard() : j1Module()
 	bonus_girl.rect = { 0,0,106,80 };
 	bell.rect = { 0,0,51,51 };
 	blue_flame.rect = { 0,0,32,32 };
+	bonus_left_frame.rect = { 0,0,112,66 };
+	bonus_left_letters.rect = { 0,0,80,24 };
+	bonus_right_frame.rect = { 0,0,89,50 };
+	bonus_right_letters.rect = { 0,0,89,50 };
 }
 
 // Destructor
@@ -120,6 +124,12 @@ bool PinballBoard::Start()
 
 	bell.image = App->tex->Load("Sprites/bell.png");
 
+	bonus_left_frame.image = App->tex->Load("Sprites/bonus left frame.png");
+	bonus_left_letters.image = App->tex->Load("Sprites/bonus_left_leters.png");
+
+	bonus_right_frame.image = App->tex->Load("Sprites/bonus right frame.png");
+	bonus_right_letters.image = App->tex->Load("Sprites/bonus_right_leters.png");
+
 	return true;
 }
 
@@ -164,6 +174,13 @@ bool PinballBoard::Draw()
 		rkick = rkick->next;
 	}
 
+	App->render->Blit(bonus_left_frame.image, 122, 355, &bonus_left_frame.rect);
+	App->render->Blit(bonus_right_frame.image, 367, 360, &bonus_right_frame.rect);
+
+	// draw stuff
+
+	App->render->Blit(bonus_right_letters.image, 367, 360, &bonus_right_letters.rect);
+	App->render->Blit(bonus_left_letters.image, 137, 370, &bonus_left_letters.rect);
 	App->render->Blit(bonus_girl.image, 125, 385, &bonus_girl.rect);
 
 	int ball_x, ball_y;
