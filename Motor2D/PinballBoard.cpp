@@ -1605,6 +1605,18 @@ bool PinballBoard::CreateBouncers()
 	rectangle16->listener = App->pinball;
 	rectangle17 = App->physics->CreateStaticRectangle(385, 150, 3, 15, 1.025f, BOARD, BALL, -50);
 	rectangle17->listener = App->pinball;
+	rectangle18 = App->physics->CreateStaticRectangle(480, 195, 3, 15, 1.025f, BOARD, BALL, -30);
+	rectangle18->listener = App->pinball;
+	rectangle19 = App->physics->CreateStaticRectangle(491, 213, 3, 15, 1.025f, BOARD, BALL, -30);
+	rectangle19->listener = App->pinball;
+	rectangle20 = App->physics->CreateStaticRectangle(123, 410, 3, 60, 1.05f, BOARD, BALL, -30);
+	rectangle20->listener = App->pinball;
+	rectangle21 = App->physics->CreateStaticRectangle(236, 410, 3, 60, 1.05f, BOARD, BALL, 30);
+	rectangle21->listener = App->pinball;
+	rectangle22 = App->physics->CreateStaticRectangle(352, 410, 3, 60, 1.05f, BOARD, BALL, -30);
+	rectangle22->listener = App->pinball;
+	rectangle23 = App->physics->CreateStaticRectangle(468, 410, 3, 60, 1.05f, BOARD, BALL, 30);
+	rectangle23->listener = App->pinball;
 
 	return true;
 }
