@@ -479,13 +479,22 @@ bool PinballBoard::Update(float dt)
 	}
 
 	if (add_force) {
-		add_force = false;
 		b2Filter fil;
 		fil.categoryBits = BALL;
 		fil.maskBits = LAUNCH;
 		ball->body->GetFixtureList()->SetFilterData(fil);
-		b2Vec2 force(7.0f, -1.0f);
+		ball->body->SetLinearVelocity(b2Vec2_zero);
+		b2Vec2 force(7.0f, -15.0f);
 		ball->body->ApplyForceToCenter(force, true);
+		add_force = false;
+		fling = true;
+	}
+	if (count > flight_time_start + flight_time && fling) {
+		b2Filter fil;
+		fil.categoryBits = BALL;
+		fil.maskBits = BOARD;
+		ball->body->GetFixtureList()->SetFilterData(fil);
+		fling = false;
 	}
 
 	count++;
@@ -667,14 +676,7 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 	else if (bodyA == eat) 
 		if (bodyB == ball) 
 			add_force = true;
-	else if (bodyA == fall_to_board) {
-		if (bodyB == ball) {
-			b2Filter fil;
-			fil.categoryBits = BALL;
-			fil.maskBits = BOARD;
-			ball->body->GetFixtureList()->SetFilterData(fil);
-		}
-	}
+			flight_time_start = count;
 }
 
 bool PinballBoard::CreateBoardPhyisics()
@@ -1777,8 +1779,6 @@ bool PinballBoard::CreateTrigers()
 
 	eat = App->physics->CreateRectangleSensor(47, 126, 10, 10);
 	eat->listener = App->pinball;
-	fall_to_board = App->physics->CreateRectangleSensor(167, 126, 60, 30, 0.0f, LAUNCH, BALL);
-	fall_to_board->listener = App->pinball;
 
 	return true;
 }
@@ -1798,6 +1798,7 @@ void PinballBoard::Reset()
 {
 	losed_balls = 0;
 	score = 0;
+	count = 0;
 	Restart();
 }
 

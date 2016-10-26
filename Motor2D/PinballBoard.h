@@ -254,8 +254,10 @@ private:
 	bool		pinkrect3_collided = false;
 
 	PhysBody*	eat;
-	PhysBody*	fall_to_board;
+	int			flight_time = 60;
+	int			flight_time_start;
 	bool		add_force = false;
+	bool		fling = false;
 
 };
 
