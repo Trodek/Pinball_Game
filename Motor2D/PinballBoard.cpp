@@ -50,6 +50,8 @@ PinballBoard::PinballBoard() : j1Module()
 	rocket_single.rect = {0,0,27,39};
 	rocket_double.rect = {0,0,51,46};
 	stick_hit.rect = { 0,0,47,47 };
+	blue_guy.rect = { 0,0,108,173 };
+	spiner.rect = { 0,0,11,11 };
 }
 
 // Destructor
@@ -151,6 +153,9 @@ bool PinballBoard::Start()
 
 	stick_hit.image = App->tex->Load("Sprites/sticker_hit.png");
 
+	blue_guy.image = App->tex->Load("Sprites/blue_guy.png");
+	spiner.image = App->tex->Load("Sprites/spin.png");
+
 	App->audio->PlayMusic("Sounds/song.ogg");
 	hit_sound = App->audio->LoadFx("Sounds/sound 527 (Bump - Body Hit 04).ogg");
 	tel_sound = App->audio->LoadFx("Sounds/sound 530 (chatter_target_hit).ogg");
@@ -161,6 +166,7 @@ bool PinballBoard::Start()
 	gm_sound = App->audio->LoadFx("Sounds/sound 65 (good_morning_dillydale).ogg");
 	loseball_sound = App->audio->LoadFx("Sounds/sound 542 (balll_goes_out_of_play).ogg");
 	eat_sound = App->audio->LoadFx("Sounds/sound 514 (greedy_gulp).ogg");
+	
 
 	return true;
 }
@@ -169,6 +175,8 @@ bool PinballBoard::Start()
 bool PinballBoard::Draw()
 {
 	App->render->Blit(background.image, 0, 0, &background.rect);
+
+	App->render->Blit(blue_guy.image, 240, 185, &blue_guy.rect);
 
 	App->render->Blit(pink_puncher.image, 77, 25, &pink_puncher.rect, 0.0f, 38);
 
@@ -303,6 +311,13 @@ bool PinballBoard::Draw()
 	}
 
 	App->render->Blit(mill_sprite.image, 265, 380, &mill_sprite.rect, 1.0f, mill.body->GetRotation(), 57, 16);
+
+	angle += 50;
+	App->render->Blit(spiner.image, 92, 198, &spiner.rect, 1.0f, angle);
+	App->render->Blit(spiner.image, 78, 208, &spiner.rect,1.0f,-angle);
+
+	App->render->Blit(spiner.image, 540, 223, &spiner.rect, 1.0f, angle);
+	App->render->Blit(spiner.image, 523, 218, &spiner.rect, 1.0f, -angle);
 
 	App->render->Blit(bell.image, 269, 158, &bell.rect);
 

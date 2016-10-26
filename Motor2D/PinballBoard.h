@@ -175,6 +175,10 @@ private:
 
 	Sprite		pink_puncher;
 
+	Sprite		blue_guy;
+	Sprite		spiner;
+	int			angle = 0;
+
 	//UI
 	Sprite		score_right;
 	Sprite		score_left;
