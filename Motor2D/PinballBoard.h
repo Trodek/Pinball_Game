@@ -115,8 +115,12 @@ private:
 	PhysBody*	trigger_righttube;
 	PhysBody*	trigger_lose_left;
 	PhysBody*	trigger_lose_right;
+	PhysBody*	trigger_top_mid_left;
+	PhysBody*	trigger_top_mid_right;
 
 	bool		lose_triggered = false;
+	bool		to_create_mid_walls = false;
+	bool		created_mid_walls = false;
 
 	bool		lefttube_triggered = false;
 	bool		lefttubejoint_created = true;
