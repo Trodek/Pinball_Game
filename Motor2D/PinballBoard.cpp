@@ -183,6 +183,13 @@ bool PinballBoard::Draw()
 	App->render->Blit(bonus_left_letters.image, 137, 370, &bonus_left_letters.rect);
 	App->render->Blit(bonus_girl.image, 125, 385, &bonus_girl.rect);
 
+	App->render->Blit(teleport.image, 166, 228, &teleport.rect);
+	App->render->Blit(teleport.image, 166, 276, &teleport.rect);
+	App->render->Blit(teleport.image, 403, 228, &teleport.rect);
+	App->render->Blit(teleport.image, 403, 276, &teleport.rect);
+	App->render->Blit(teleport.image, 47, 316, &teleport.rect);
+	App->render->Blit(teleport.image, 524, 316, &teleport.rect);
+
 	int ball_x, ball_y;
 	ball->GetPosition(ball_x, ball_y);
 	if (ball->body->GetFixtureList()->GetFilterData().maskBits == TOP) {
@@ -233,12 +240,7 @@ bool PinballBoard::Draw()
 	App->render->Blit(right_puncher_o.image, 442, 372, &right_puncher_o.rect);	//orange punchers
 	App->render->Blit(left_puncher_o.image, 316, 374, &left_puncher_o.rect);
 
-	App->render->Blit(teleport.image, 166, 228, &teleport.rect);
-	App->render->Blit(teleport.image, 166, 276, &teleport.rect);
-	App->render->Blit(teleport.image, 403, 228, &teleport.rect);
-	App->render->Blit(teleport.image, 403, 276, &teleport.rect);
-	App->render->Blit(teleport.image, 47, 316, &teleport.rect);
-	App->render->Blit(teleport.image, 524, 316, &teleport.rect);
+	
 
 	App->render->Blit(mouth.image, 38, 113, &mouth.rect);
 
@@ -366,27 +368,44 @@ bool PinballBoard::Update(float dt)
 	}
 
 	if (to_create_mid_walls) {
-		int lcolumn[8] = {
-			285, 95,
+		int lcolumn[6] = {
+			295, 95,
 			265, 110,
 			269, 117,
-			289, 98
 		};
-		App->physics->CreateStaticChain(0, 0, lcolumn, 8);
+		to_destroy_top_mid_left = App->physics->CreateStaticChain(0, 0, lcolumn, 6);
 
-		int rcolumn[8] = {
+		int rcolumn[6] = {
 			300, 98,
 			320, 120,
 			324, 112,
-			304, 95
 		};
-		App->physics->CreateStaticChain(0, 0, rcolumn, 8);
+		to_destroy_top_mid_right = App->physics->CreateStaticChain(0, 0, rcolumn, 6);
 		created_mid_walls = true;
 		to_create_mid_walls = false;
 	}
 
+	if (to_tp != nullptr) {
+		TeleportBall(to_tp);
+		tp_aux = count;
+		tp_listener = to_tp;
+		to_tp = nullptr;
+	}
+	if (count - tp_aux > 25 && tp_listener != nullptr) {
+		tp_listener->listener = App->pinball;
+		tp_listener = nullptr;
+	}
+
 	count++;
 	return true;
+}
+
+void PinballBoard::TeleportBall(PhysBody* tp)
+{
+	int x, y;
+	tp->GetPosition(x, y);
+	tp->listener = nullptr;
+	ball->body->SetTransform(b2Vec2(0.02f*x, 0.02f*y), 0);
 }
 
 // Called before quitting
@@ -485,6 +504,36 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 	else if (bodyA == trigger_top_mid_left || bodyA == trigger_top_mid_right) {
 		if (bodyB == ball) {
 			if(!created_mid_walls) to_create_mid_walls = true;
+		}
+	}
+	else if (bodyA == tp_left) {
+		if (bodyB == ball) {
+			to_tp = tp_right;
+		}
+	}
+	else if (bodyA == tp_right) {
+		if (bodyB == ball) {
+			to_tp = tp_left;
+		}
+	}
+	else if (bodyA == tp_elephant_left_top) {
+		if (bodyB == ball) {
+			to_tp = tp_elephant_left_bot;
+		}
+	}
+	else if (bodyA == tp_elephant_left_bot) {
+		if (bodyB == ball) {
+			to_tp = tp_elephant_left_top;
+		}
+	}
+	else if (bodyA == tp_elephant_right_top) {
+		if (bodyB == ball) {
+			to_tp = tp_elephant_right_bot;
+		}
+	}
+	else if (bodyA == tp_elephant_right_bot) {
+		if (bodyB == ball) {
+			to_tp = tp_elephant_right_top;
 		}
 	}
 }
@@ -800,6 +849,20 @@ bool PinballBoard::CreateBoardPhyisics()
 		size = 28;
 		App->physics->CreateStaticChain(0, 0, right_top, size);
 	}
+
+	int x_triangle[4] = {
+		22,25,
+		58,6
+	};
+	size = 4;
+	App->physics->CreateStaticChain(190, 173, x_triangle, size, 0.0f, BOARD);
+
+	int x_triangle_right[4] = {
+		58,25,
+		22, 6
+	};
+	size = 4;
+	App->physics->CreateStaticChain(318, 173, x_triangle_right, size, 0.0f, BOARD);
 
 	//elephants
 	{										
@@ -1448,10 +1511,10 @@ bool PinballBoard::CreateKickers()
 
 bool PinballBoard::CreateTrigers()
 {
-	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 1, 0.0f, LAUNCH);
+	launch_triger = App->physics->CreateRectangleSensor(295, 152, 32, 3, 0.0f, LAUNCH);
 	launch_triger->listener = App->pinball;
 
-	tolaunch_triger = App->physics->CreateRectangleSensor(295, 157, 32, 1);
+	tolaunch_triger = App->physics->CreateRectangleSensor(295, 157, 32, 3);
 	tolaunch_triger->listener = App->pinball;
 
 	x_lefttop_toTOP = App->physics->CreateRectangleSensor(216, 189, 3, 10);
@@ -1474,17 +1537,42 @@ bool PinballBoard::CreateTrigers()
 	x_leftbot_toBOARD = App->physics->CreateRectangleSensor(206, 319, 3, 90, 0.0f, TOP, BALL, -40);
 	x_leftbot_toBOARD->listener = App->pinball;
 
-	trigger_lefttube = App->physics->CreateRectangleSensor(95, 212, 3, 10, 0.0f, BOARD, BALL, 39);
+	trigger_lefttube = App->physics->CreateRectangleSensor(90, 212, 3, 10, 0.0f, BOARD, BALL, 39);
 	trigger_lefttube->listener = App->pinball;
 
-	trigger_righttube = App->physics->CreateRectangleSensor(525, 240, 3, 15, 0.0f, BOARD, BALL, -45);
+	trigger_righttube = App->physics->CreateRectangleSensor(535, 230, 3, 15, 0.0f, BOARD, BALL, -45);
 	trigger_righttube->listener = App->pinball;
 
-	trigger_top_mid_left = App->physics->CreateRectangleSensor(272, 102, 3, 30, 0.0f, BOARD, BALL, 45);
+	trigger_top_mid_left = App->physics->CreateRectangleSensor(262, 92, 3, 30, 0.0f, BOARD, BALL, 25);
 	trigger_top_mid_left->listener = App->pinball;
 
-	trigger_top_mid_right = App->physics->CreateRectangleSensor(312, 102, 3, 30, 0.0f, BOARD, BALL, -45);
+	trigger_top_mid_right = App->physics->CreateRectangleSensor(325, 92, 3, 30, 0.0f, BOARD, BALL, -25);
 	trigger_top_mid_right->listener = App->pinball;
+
+	trigger_lose_left = App->physics->CreateRectangleSensor(170, 520, 90, 5, 0.0f, BOARD, BALL);
+	trigger_lose_left->listener = App->pinball;
+
+	trigger_lose_right = App->physics->CreateRectangleSensor(415, 520, 90, 5, 0.0f, BOARD, BALL);
+	trigger_lose_right->listener = App->pinball;
+
+	tp_left = App->physics->CreateRectangleSensor(57, 326, 5, 5);
+	tp_left->listener = App->pinball;
+	
+	tp_right = App->physics->CreateRectangleSensor(534, 326, 5, 5);
+	tp_right->listener = App->pinball;
+
+	tp_elephant_left_top = App->physics->CreateRectangleSensor(176, 288, 5, 5);
+	tp_elephant_left_top->listener = App->pinball;
+
+	tp_elephant_left_bot = App->physics->CreateRectangleSensor(176, 238, 5, 5);
+	tp_elephant_left_bot->listener = App->pinball;
+
+	tp_elephant_right_top = App->physics->CreateRectangleSensor(413, 238, 5, 5);
+	tp_elephant_right_top->listener = App->pinball;
+
+	tp_elephant_right_bot = App->physics->CreateRectangleSensor(413, 286, 5, 5);
+	tp_elephant_right_bot->listener = App->pinball;
+
 
 	return true;
 }
@@ -1492,10 +1580,15 @@ bool PinballBoard::CreateTrigers()
 void PinballBoard::Restart()
 {
 	CreateBall();
+	created_mid_walls = false;
+	if (to_destroy_top_mid_left != nullptr) {
+		App->physics->DeleteObject(to_destroy_top_mid_left);
+		App->physics->DeleteObject(to_destroy_top_mid_right);
+	}
 	lose_triggered = false;
 }
 
-void PinballBoard::DrawUI()
+void PinballBoard::DrawUI() const
 {
 	App->render->Blit(score_left.image, 25, 460, &score_left.rect);
 	App->render->Blit(score_right.image, 487, 460, &score_right.rect);

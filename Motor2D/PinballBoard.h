@@ -45,7 +45,8 @@ public:
 
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
-	void CreateBall();
+	void Restart();
+
 
 public:
 
@@ -59,9 +60,9 @@ private:
 	bool CreateStickersCollisions();
 	bool CreateKickers();
 	bool CreateTrigers();
-	void Restart();
-
-	void DrawUI();
+	void CreateBall();
+	void DrawUI() const;
+	void TeleportBall(PhysBody* tp);
 
 private:
 
@@ -118,6 +119,9 @@ private:
 	PhysBody*	trigger_top_mid_left;
 	PhysBody*	trigger_top_mid_right;
 
+	PhysBody*	to_destroy_top_mid_left;
+	PhysBody*	to_destroy_top_mid_right;
+
 	bool		lose_triggered = false;
 	bool		to_create_mid_walls = false;
 	bool		created_mid_walls = false;
@@ -172,7 +176,18 @@ private:
 	int			orange_font;
 	int			white_font;
 
+	PhysBody*	tp_left;
+	PhysBody*	tp_right;
 
+	PhysBody*	tp_elephant_left_top;
+	PhysBody*	tp_elephant_left_bot;
+
+	PhysBody*	tp_elephant_right_top;
+	PhysBody*	tp_elephant_right_bot;
+
+	PhysBody*	to_tp = nullptr;
+	PhysBody*	tp_listener;
+	int			tp_aux = 0;
 
 };
 
