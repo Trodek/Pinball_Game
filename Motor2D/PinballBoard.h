@@ -61,6 +61,9 @@ private:
 	bool CreateTrigers();
 	void Restart();
 
+	void AddScore();
+	void AddBonusScore();
+
 	void DrawUI();
 
 private:
@@ -171,8 +174,11 @@ private:
 
 	int			orange_font;
 	int			white_font;
+	int			multip = 1;
 
-
+	int			multip_time = 300;
+	int			multip_start;
+	bool		extra_points = false;
 
 };
 

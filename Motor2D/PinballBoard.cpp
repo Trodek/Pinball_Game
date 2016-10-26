@@ -35,12 +35,19 @@ PinballBoard::PinballBoard() : j1Module()
 	mill_sprite.rect = { 0,0,57,13 };
 	tunnel.rect = { 0,0,530,244 };
 	bonus_girl.rect = { 0,0,106,80 };
-	bell.rect = { 0,0,89,52 };
+	bell.rect = { 0,0,51,51 };
 	blue_flame.rect = { 0,0,32,32 };
 	bonus_left_frame.rect = { 0,0,112,66 };
 	bonus_left_letters.rect = { 0,0,80,24 };
 	bonus_right_frame.rect = { 0,0,89,50 };
 	bonus_right_letters.rect = { 0,0,89,50 };
+	x_arrows.rect = {0,0,172,47};
+	eat_arrows.rect = {0,0,29,56};
+	tel_marks.rect = {0,0,113,96};
+	right_eleph_marks.rect = {0,0,134,116};
+	left_eleph_marks.rect = {0,0,137,115};
+	rocket_single.rect = {0,0,27,39};
+	rocket_double.rect = {0,0,51,46};
 }
 
 // Destructor
@@ -130,6 +137,14 @@ bool PinballBoard::Start()
 	bonus_right_frame.image = App->tex->Load("Sprites/bonus right frame.png");
 	bonus_right_letters.image = App->tex->Load("Sprites/bonus_right_leters.png");
 
+	x_arrows.image = App->tex->Load("Sprites/x_arrows.png");
+	eat_arrows.image = App->tex->Load("Sprites/eat_guy_arrows.png");
+	tel_marks.image = App->tex->Load("Sprites/telephone_triggers_marks.png");
+	right_eleph_marks.image = App->tex->Load("Sprites/right_elephant_trigger_marks.png");
+	left_eleph_marks.image = App->tex->Load("Sprites/left_elephant_trigger_marks.png");
+	rocket_single.image = App->tex->Load("Sprites/rocket_trigger_mark.png");
+	rocket_double.image = App->tex->Load("Sprites/rocket_trigger_mark.png");
+
 	return true;
 }
 
@@ -215,7 +230,7 @@ bool PinballBoard::Draw()
 
 	App->render->Blit(mill_sprite.image, 265, 380, &mill_sprite.rect, 1.0f, mill.body->GetRotation(), 57, 16);
 
-	App->render->Blit(bell.image, 252, 150, &bell.rect);
+	App->render->Blit(bell.image, 269, 158, &bell.rect);
 
 	int kick_x, kick_y;
 	top_kicker.anchor->GetPosition(kick_x, kick_y);
@@ -314,6 +329,9 @@ bool PinballBoard::Update(float dt)
 				fil.categoryBits = BALL;
 				fil.maskBits = BOARD;
 				ball->body->GetFixtureList()->SetFilterData(fil);
+				multip = 3;
+				multip_start = count;
+				extra_points = true;
 			}
 		}
 	}
@@ -361,6 +379,9 @@ bool PinballBoard::Update(float dt)
 				fil.categoryBits = BALL;
 				fil.maskBits = BOARD;
 				ball->body->GetFixtureList()->SetFilterData(fil);
+				multip = 3;
+				multip_start = count;
+				extra_points = true;
 			}
 		}
 	}
@@ -383,6 +404,11 @@ bool PinballBoard::Update(float dt)
 		App->physics->CreateStaticChain(0, 0, rcolumn, 8);
 		created_mid_walls = true;
 		to_create_mid_walls = false;
+	}
+
+	if (multip_start + multip_time < count && extra_points) {
+		multip = 1;
+		extra_points = false;
 	}
 
 	count++;
@@ -1493,6 +1519,16 @@ void PinballBoard::Restart()
 {
 	CreateBall();
 	lose_triggered = false;
+}
+
+void PinballBoard::AddScore()
+{
+	score += multip * 50;
+}
+
+void PinballBoard::AddBonusScore()
+{
+	score += 750 * multip;
 }
 
 void PinballBoard::DrawUI()
