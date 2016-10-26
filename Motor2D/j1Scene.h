@@ -34,7 +34,9 @@ public:
 	int motor_speed;
 
 private:
-
+	uint launch_down;
+	uint launch_up;
+	uint kicker;
 };
 
 #endif // __j1SCENE_H__

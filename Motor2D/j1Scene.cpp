@@ -34,6 +34,8 @@ bool j1Scene::Awake(pugi::xml_node& node)
 // Called before the first frame
 bool j1Scene::Start()
 {
+	launch_down = App->audio->LoadFx("Sounds/sound 179.ogg");
+	launch_up = App->audio->LoadFx("Sounds/sound 179.ogg");
 	return true;
 }
 
