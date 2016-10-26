@@ -164,6 +164,8 @@ bool PinballBoard::Draw()
 	App->render->Blit(pink_puncher.image, 180, -15, &pink_puncher.rect, 0.0f, 95);
 	App->render->Blit(pink_puncher.image, 67, 75, &pink_puncher.rect, 0.0f, 0);
 	App->render->Blit(pink_puncher.image, 210, 115, &pink_puncher.rect, 0.0f, 220);
+	App->render->Blit(pink_puncher.image, 105, 135, &pink_puncher.rect, 0.0f, 150);
+	App->render->Blit(pink_puncher.image, 75, 105, &pink_puncher.rect, 0.0f, 130);
 
 	App->render->Blit(brown_web.image, 80, 25, &brown_web.rect);
 
@@ -1485,11 +1487,28 @@ bool PinballBoard::CreateStickersCollisions()
 
 bool PinballBoard::CreateBouncers()
 {
-	App->physics->CreateStaticRectangle(91, 39, 21, 58, 1.025f, BOARD, BALL, 38);
-	App->physics->CreateStaticRectangle(135, 12, 21, 58, 1.025f, BOARD, BALL, 70);
-	App->physics->CreateStaticRectangle(195, 7, 21, 58, 1.025f, BOARD, BALL, 95);
-	App->physics->CreateStaticRectangle(72, 89, 21, 58, 1.025f, BOARD, BALL, 0);
-	App->physics->CreateStaticRectangle(225, 145, 18, 50, 1.025f, BOARD, BALL, 220);
+	rectangle1 = App->physics->CreateStaticRectangle(91, 39, 21, 58, 1.025f, BOARD, BALL, 38);
+	rectangle1->listener = App->pinball;
+	rectangle2 = App->physics->CreateStaticRectangle(135, 12, 21, 58, 1.025f, BOARD, BALL, 70);
+	rectangle2->listener = App->pinball;
+	rectangle3 = App->physics->CreateStaticRectangle(195, 7, 21, 58, 1.025f, BOARD, BALL, 95);
+	rectangle3->listener = App->pinball;
+	rectangle4 = App->physics->CreateStaticRectangle(72, 89, 21, 58, 1.025f, BOARD, BALL, 0);
+	rectangle4->listener = App->pinball;
+	rectangle5 = App->physics->CreateStaticRectangle(224, 150, 18, 50, 1.025f, BOARD, BALL, 220);
+	rectangle5->listener = App->pinball;
+	rectangle6 = App->physics->CreateStaticRectangle(110, 165, 18, 50, 1.025f, BOARD, BALL, 150);
+	rectangle6->listener = App->pinball;
+	rectangle7 = App->physics->CreateStaticRectangle(80, 130, 18, 50, 1.025f, BOARD, BALL, 130);
+	rectangle7->listener = App->pinball;
+	rectangle8 = App->physics->CreateStaticRectangle(460, 80, 3, 15, 1.025f, BOARD, BALL, -20);
+	rectangle8->listener = App->pinball;
+	rectangle9 = App->physics->CreateStaticRectangle(465, 98, 3, 15, 1.025f, BOARD, BALL, -10);
+	rectangle9->listener = App->pinball;
+	rectangle10 = App->physics->CreateStaticRectangle(465, 117, 3, 15, 1.025f, BOARD, BALL, 10);
+	rectangle10->listener = App->pinball;
+	rectangle11 = App->physics->CreateStaticRectangle(445, 265, 3, 15, 1.025f, BOARD, BALL, 30);
+	rectangle11->listener = App->pinball;
 
 
 	return true;

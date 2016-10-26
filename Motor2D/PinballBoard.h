@@ -206,6 +206,30 @@ private:
 	int			tp_aux = 0;
 
 
+	PhysBody*	rectangle1;
+	PhysBody*	rectangle2;
+	PhysBody*	rectangle3;
+	PhysBody*	rectangle4;
+	PhysBody*	rectangle5;
+	PhysBody*	rectangle6;
+	PhysBody*	rectangle7;
+	PhysBody*	rectangle8;
+	PhysBody*	rectangle9;
+	PhysBody*	rectangle10;
+	PhysBody*	rectangle11;
+	PhysBody*	rectangle12;
+	PhysBody*	rectangle13;
+	PhysBody*	rectangle14;
+	PhysBody*	rectangle15;
+	PhysBody*	rectangle16;
+	PhysBody*	rectangle17;
+	PhysBody*	rectangle18;
+	PhysBody*	rectangle19;
+	PhysBody*	rectangle20;
+	PhysBody*	rectangle21;
+	PhysBody*	rectangle22;
+	PhysBody*	rectangle23;
+
 };
 
 #endif // !_PinballBoard_
