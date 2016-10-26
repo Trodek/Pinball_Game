@@ -205,7 +205,21 @@ private:
 	PhysBody*	tp_listener;
 	int			tp_aux = 0;
 
-
+	Sprite		stick_hit;
+	PhysBody*	stick1;
+	PhysBody*	stick2;
+	PhysBody*	stick3;
+	PhysBody*	stick4;
+	PhysBody*	stick5;
+	PhysBody*	stick6;
+	PhysBody*	stick7;
+	PhysBody*	stick8;
+	PhysBody*	stick9;
+	PhysBody*	collided_stick = nullptr;
+	int			stick_time = 15;
+	int			stick_time_start;
+	bool		stick_collided = false;
+	uint		hit_sound;
 };
 
 #endif // !_PinballBoard_

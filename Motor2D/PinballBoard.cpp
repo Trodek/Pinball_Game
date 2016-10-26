@@ -49,6 +49,7 @@ PinballBoard::PinballBoard() : j1Module()
 	left_eleph_marks.rect = {0,0,137,115};
 	rocket_single.rect = {0,0,27,39};
 	rocket_double.rect = {0,0,51,46};
+	stick_hit.rect = { 0,0,47,47 };
 }
 
 // Destructor
@@ -148,7 +149,10 @@ bool PinballBoard::Start()
 	rocket_single.image = App->tex->Load("Sprites/rocket_trigger_mark.png");
 	rocket_double.image = App->tex->Load("Sprites/2rocket_trigger_mark.png");
 
+	stick_hit.image = App->tex->Load("Sprites/sticker_hit.png");
+
 	App->audio->PlayMusic("Sounds/song.ogg");
+	hit_sound = App->audio->LoadFx("Sounds/sound 527 (Bump - Body Hit 04).ogg");
 
 	return true;
 }
@@ -174,6 +178,18 @@ bool PinballBoard::Draw()
 	App->render->Blit(pink_web3.image, 80, 25, &pink_web3.rect);*/
 
 	App->render->Blit(pink_guy.image, 125, 55, &pink_guy.rect);
+
+	if (stick_collided && collided_stick != nullptr) {
+		if (count < stick_time_start + stick_time) {
+			int x, y;
+			collided_stick->GetPosition(x, y);
+			App->render->Blit(stick_hit.image, x-13, y-13, &stick_hit.rect);
+		}
+		else {
+			stick_collided = false;
+			collided_stick = nullptr;
+		}
+	}
 
 	iPoint launch_pos;
 	launcher.body->GetPosition(launch_pos.x, launch_pos.y);
@@ -578,6 +594,15 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 	else if (bodyA == tp_elephant_right_bot) {
 		if (bodyB == ball) {
 			to_tp = tp_elephant_right_top;
+		}
+	}
+	else if (bodyA == stick1 || bodyA == stick2 || bodyA == stick3 || bodyA == stick4 || bodyA == stick5 || bodyA == stick6 || bodyA == stick7 || bodyA == stick8 || bodyA == stick9) {
+		if (bodyB == ball) {
+			collided_stick = bodyA;
+			stick_time_start = count;
+			stick_collided = true;
+			App->audio->PlayFx(hit_sound);
+			AddScore();
 		}
 	}
 }
@@ -1469,17 +1494,26 @@ bool PinballBoard::CreateBoardPhyisics()
 
 bool PinballBoard::CreateStickersCollisions()
 {
-	App->physics->CreateStaticCircle(386, 102, 10, 1.025f); //yellow stickers
-	App->physics->CreateStaticCircle(429, 97, 10, 1.025f);
-	App->physics->CreateStaticCircle(416, 139, 10, 1.025f);
+	stick1 = App->physics->CreateStaticCircle(386, 102, 10, 1.025f); //yellow stickers
+	stick2 = App->physics->CreateStaticCircle(429, 97, 10, 1.025f);
+	stick3 = App->physics->CreateStaticCircle(416, 139, 10, 1.025f);
+	stick4 = App->physics->CreateStaticCircle(158, 102, 10, 1.025f); // grey sticker
+	stick5 = App->physics->CreateStaticCircle(323, 259, 10, 1.025f); //blue stickers
+	stick6 = App->physics->CreateStaticCircle(267, 258, 10, 1.025f);
+	stick7 = App->physics->CreateStaticCircle(273, 294, 10, 1.025f);
+	stick8 = App->physics->CreateStaticCircle(291, 330, 10, 1.025f);
+	stick9 = App->physics->CreateStaticCircle(321, 297, 10, 1.025f);
 
-	App->physics->CreateStaticCircle(158, 102, 10, 1.025f); // grey sticker
+	stick1->listener = App->pinball;
+	stick2->listener = App->pinball;
+	stick3->listener = App->pinball;
+	stick4->listener = App->pinball;
+	stick5->listener = App->pinball;
+	stick6->listener = App->pinball;
+	stick7->listener = App->pinball;
+	stick8->listener = App->pinball;
+	stick9->listener = App->pinball;
 
-	App->physics->CreateStaticCircle(323, 259, 10, 1.025f); //blue stickers
-	App->physics->CreateStaticCircle(267, 258, 10, 1.025f);
-	App->physics->CreateStaticCircle(273, 294, 10, 1.025f);
-	App->physics->CreateStaticCircle(291, 330, 10, 1.025f);
-	App->physics->CreateStaticCircle(321, 297, 10, 1.025f);
 	return true;
 }
 
@@ -1583,14 +1617,14 @@ bool PinballBoard::CreateTrigers()
 	x_righttop_toBOARD = App->physics->CreateRectangleSensor(378, 189, 3, 10, 0.0f, TOP);
 	x_righttop_toBOARD->listener = App->pinball;
 
-	x_rightbot_toTOP = App->physics->CreateRectangleSensor(377, 312, 3, 70, 0.0f, BOARD, BALL, 40);
+	x_rightbot_toTOP = App->physics->CreateRectangleSensor(374, 312, 3, 70, 0.0f, BOARD, BALL, 40);
 	x_rightbot_toTOP->listener = App->pinball;
-	x_rightbot_toBOARD = App->physics->CreateRectangleSensor(381, 319, 3, 80, 0.0f, TOP, BALL, 40);
+	x_rightbot_toBOARD = App->physics->CreateRectangleSensor(378, 319, 3, 80, 0.0f, TOP, BALL, 40);
 	x_rightbot_toBOARD->listener = App->pinball;
 
-	x_leftbot_toTOP = App->physics->CreateRectangleSensor(210, 313, 3, 70, 0.0f, BOARD, BALL, -40);
+	x_leftbot_toTOP = App->physics->CreateRectangleSensor(213, 313, 3, 70, 0.0f, BOARD, BALL, -40);
 	x_leftbot_toTOP->listener = App->pinball;
-	x_leftbot_toBOARD = App->physics->CreateRectangleSensor(206, 319, 3, 90, 0.0f, TOP, BALL, -40);
+	x_leftbot_toBOARD = App->physics->CreateRectangleSensor(209, 319, 3, 90, 0.0f, TOP, BALL, -40);
 	x_leftbot_toBOARD->listener = App->pinball;
 
 	trigger_lefttube = App->physics->CreateRectangleSensor(90, 212, 3, 10, 0.0f, BOARD, BALL, 39);
