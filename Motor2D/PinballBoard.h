@@ -112,6 +112,7 @@ private:
 	PhysBody*	x_leftbot_toBOARD;
 	PhysBody*	x_rightbot_toBOARD;
 	PhysBody*	trigger_lefttube;
+	PhysBody*	trigger_righttube;
 	PhysBody*	trigger_lose_left;
 	PhysBody*	trigger_lose_right;
 
@@ -120,6 +121,10 @@ private:
 	bool		lefttube_triggered = false;
 	bool		lefttubejoint_created = true;
 	path_joint*	lefttube;
+
+	bool		righttube_triggered = false;
+	bool		righttubejoint_created = true;
+	path_joint* righttube;
 
 	Sprite		pink_guy;
 	Sprite		brown_web;

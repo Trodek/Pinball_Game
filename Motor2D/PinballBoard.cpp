@@ -232,29 +232,48 @@ bool PinballBoard::Draw()
 
 
 	// TEST
-	int path[40] = {
-		53, 217,
-		45, 200,
-		62, 175,
-		58, 164,
-		23, 157,
-		17, 140,
-		63, 115,
-		65, 98,
-		43, 80,
-		49, 66,
-		101, 64,
-		110, 55,
-		110, 33,
-		133, 35,
-		147, 52,
-		160, 49,
-		180, 30,
-		199, 35,
-		214, 49,
-		252, 50
+	int path[78] = {
+		491, 231,
+		503, 212,
+		512, 190,
+		519, 163,
+		519, 132,
+		513, 120,
+		501, 110,
+		483, 104,
+		475, 97,
+		474, 81,
+		479, 70,
+		498, 61,
+		507, 48,
+		500, 33,
+		487, 28,
+		468, 26,
+		455, 32,
+		434, 40,
+		421, 41,
+		413, 32,
+		406, 22,
+		398, 15,
+		387, 14,
+		380, 16,
+		376, 24,
+		377, 34,
+		375, 42,
+		366, 45,
+		357, 43,
+		348, 36,
+		338, 28,
+		331, 26,
+		324, 28,
+		321, 35,
+		318, 47,
+		312, 54,
+		299, 55,
+		283, 53,
+		254, 51
 	};
-	for (int i = 0; i < 40; i++) {
+	for (int i = 0; i < 78; i++) {
 		App->render->Blit(lose_ball.image, path[i++]+35, path[i]-10, &lose_ball.rect);
 	}
 
@@ -265,6 +284,72 @@ bool PinballBoard::Draw()
 
 bool PinballBoard::Update(float dt)
 {
+	if (righttube_triggered) {
+		if (!righttubejoint_created) {
+			int path[78] = {
+				491, 231,
+				503, 212,
+				512, 190,
+				519, 163,
+				519, 132,
+				513, 120,
+				501, 110,
+				483, 104,
+				475, 97,
+				474, 81,
+				479, 70,
+				498, 61,
+				507, 48,
+				500, 33,
+				487, 28,
+				468, 26,
+				455, 32,
+				434, 40,
+				421, 41,
+				413, 32,
+				406, 22,
+				398, 15,
+				387, 14,
+				380, 16,
+				376, 24,
+				377, 34,
+				375, 42,
+				366, 45,
+				357, 43,
+				348, 36,
+				338, 28,
+				331, 26,
+				324, 28,
+				321, 35,
+				318, 47,
+				312, 54,
+				299, 55,
+				283, 53,
+				254, 51
+			};
+			righttube = App->physics->CreatePathJoint(ball->body, path, 78, 40, -5);
+			righttubejoint_created = true;
+		}
+		else {
+			iPoint ball_pos;
+			ball->GetPosition(ball_pos.x, ball_pos.y);
+			if (righttube->cur_point < righttube->points) {
+				if (count % 10 == 0) {
+					righttube->cur_point++;
+					righttube->joint->SetTarget(righttube->path[righttube->cur_point]);
+				}
+			}
+			else {
+				App->physics->DeleteJoint(righttube->joint);
+				righttube_triggered = false;
+				b2Filter fil;
+				fil.categoryBits = BALL;
+				fil.maskBits = BOARD;
+				ball->body->GetFixtureList()->SetFilterData(fil);
+			}
+		}
+	}
+
 	if (lefttube_triggered) {
 		if (!lefttubejoint_created) {
 			int path[40] = {
@@ -379,7 +464,6 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 	}
 	else if (bodyA == trigger_lose_left || bodyA == trigger_lose_right) {
 		if (bodyB == ball) {
-			LOG("%d", losed_balls);
 			if (losed_balls < 3) {
 				if (!lose_triggered) {
 					losed_balls++;
@@ -398,6 +482,16 @@ void PinballBoard::OnCollision(PhysBody * bodyA, PhysBody * bodyB)
 			ball->body->GetFixtureList()->SetFilterData(fil);
 			lefttube_triggered = true;
 			lefttubejoint_created = false;
+		}
+	}
+	else if (bodyA == trigger_righttube) {
+		if (bodyB == ball) {
+			b2Filter fil;
+			fil.categoryBits = BALL;
+			fil.maskBits = TOP;
+			ball->body->GetFixtureList()->SetFilterData(fil);
+			righttube_triggered = true;
+			righttubejoint_created = false;
 		}
 	}
 }
@@ -1028,7 +1122,142 @@ bool PinballBoard::CreateBoardPhyisics()
 	};
 	size = 20;
 	App->physics->CreateStaticChain(0, 0, launcher_tub, size, 0.0f, LAUNCH, BALL);
-	
+
+	int right_tube[258] = {
+		486, 227,
+		490, 218,
+		497, 208,
+		501, 199,
+		504, 187,
+		507, 178,
+		510, 167,
+		511, 154,
+		512, 144,
+		511, 135,
+		507, 125,
+		501, 119,
+		493, 116,
+		483, 113,
+		474, 108,
+		468, 101,
+		465, 94,
+		464, 85,
+		465, 76,
+		469, 68,
+		477, 61,
+		485, 57,
+		493, 54,
+		498, 51,
+		498, 46,
+		494, 41,
+		489, 38,
+		481, 36,
+		475, 35,
+		467, 35,
+		460, 38,
+		452, 42,
+		446, 44,
+		438, 47,
+		429, 49,
+		420, 48,
+		413, 43,
+		408, 36,
+		404, 28,
+		399, 23,
+		395, 21,
+		384, 23,
+		384, 23,
+		384, 42,
+		381, 46,
+		376, 50,
+		369, 52,
+		359, 53,
+		352, 48,
+		344, 43,
+		338, 38,
+		333, 35,
+		329, 35,
+		328, 40,
+		326, 49,
+		321, 57,
+		315, 61,
+		307, 63,
+		296, 63,
+		289, 63,
+		281, 61,
+		278, 68,
+		273, 76,
+		238, 80,
+		226, 60,
+		225, 42,
+		234, 25,
+		252, 17,
+		264, 17,
+		276, 27,
+		281, 41,
+		282, 47,
+		293, 48,
+		306, 48,
+		311, 45,
+		313, 39,
+		314, 30,
+		318, 23,
+		323, 18,
+		331, 18,
+		340, 20,
+		349, 26,
+		355, 31,
+		361, 37,
+		369, 37,
+		369, 19,
+		372, 12,
+		378, 7,
+		388, 5,
+		401, 7,
+		411, 14,
+		418, 22,
+		424, 32,
+		430, 33,
+		439, 30,
+		448, 26,
+		458, 21,
+		467, 18,
+		480, 19,
+		495, 23,
+		507, 30,
+		515, 38,
+		516, 51,
+		513, 60,
+		505, 67,
+		496, 71,
+		488, 74,
+		483, 79,
+		481, 85,
+		482, 91,
+		488, 97,
+		495, 99,
+		502, 101,
+		509, 105,
+		515, 111,
+		520, 118,
+		524, 125,
+		526, 137,
+		526, 150,
+		526, 163,
+		524, 175,
+		520, 190,
+		514, 205,
+		510, 214,
+		503, 225,
+		500, 230,
+		526, 299,
+		421, 244,
+		486, 227
+	};
+	size = 258;
+	App->physics->CreateStaticChain(43, 0, right_tube, size, 0.0f, TOP, BALL);
+
+
 	int left_tube[256] = {
 		100, 190,
 		53, 203,
@@ -1345,6 +1574,9 @@ bool PinballBoard::CreateTrigers()
 
 	trigger_lefttube = App->physics->CreateRectangleSensor(95, 212, 3, 10, 0.0f, BOARD, BALL, 39);
 	trigger_lefttube->listener = App->pinball;
+
+	trigger_righttube = App->physics->CreateRectangleSensor(525, 240, 3, 15, 0.0f, BOARD, BALL, -45);
+	trigger_righttube->listener = App->pinball;
 
 	return true;
 }
