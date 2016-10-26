@@ -77,6 +77,7 @@ bool PinballBoard::Awake(pugi::xml_node& node)
 // Called before the first frame
 bool PinballBoard::Start()
 {
+
 	CreateBoardPhyisics();
 	CreateStickersCollisions();
 	CreateKickers();

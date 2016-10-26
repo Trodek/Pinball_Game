@@ -1,4 +1,0 @@
-// Pivot 0, 0
-int midle_x_coords[2] = {
-	218, 510
-};
