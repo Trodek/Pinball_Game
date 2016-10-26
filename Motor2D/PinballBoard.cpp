@@ -28,6 +28,9 @@ PinballBoard::PinballBoard() : j1Module()
 	brown_web.rect = { 0,0,155,153 };
 	pink_web1.rect = pink_web2.rect = pink_web3.rect = { 0,0,141,139 };
 	launcher_sprite.rect = { 0,0,29,35 };
+	balls_left.rect = { 0,0,42,35 };
+	lose_ball.rect = { 0,0,16,16 };
+	mill_sprite.rect = { 0,0,57,13 };
 }
 
 // Destructor
@@ -90,6 +93,11 @@ bool PinballBoard::Start()
 
 	launcher_sprite.image = App->tex->Load("Sprites/launcher.png");
 
+	balls_left.image = App->tex->Load("Sprites/balls_ui.png");
+	lose_ball.image = App->tex->Load("Sprites/miss_ball.png");
+
+	mill_sprite.image = App->tex->Load("Sprites/mill.png");
+
 	return true;
 }
 
@@ -140,6 +148,9 @@ bool PinballBoard::Draw()
 		App->render->Blit(bluesticker.image, 304, 282, &bluesticker.rect);
 		App->render->Blit(bluesticker.image, 306, 244, &bluesticker.rect);
 	}
+
+	App->render->Blit(mill_sprite.image, 265, 380, &mill_sprite.rect, 1.0f, mill.body->GetRotation(), 57, 16);
+
 	p2List_item<kicker_info>* lkick = left_kickers.start;
 	while (lkick != NULL)
 	{
@@ -1008,7 +1019,11 @@ bool PinballBoard::CreateKickers()
 	launcher.body = App->physics->CreateRectangle(294, 480, 20, 4, 0.0f, LAUNCH);
 	launcher.joint = App->physics->CreatePrismaticJoint(launcher.anchor, launcher.body, { 0,0 }, { 0,0 }, true, 1, -30, true, -10, 5);
 
-	return false;
+	mill.anchor = App->physics->CreateStaticCircle(295, 388, 5, 0.0f, BOARD, BALL);
+	mill.body = App->physics->CreateRectangle(295, 338, 46, 4, 0.0f);
+	kick.joint = App->physics->CreateRevoluteJoint(mill.anchor, mill.body, { 0,0 }, { 0,0 }, false, 0, 0, true, 2, 2);
+
+	return true;
 }
 
 
@@ -1053,6 +1068,12 @@ void PinballBoard::DrawUI()
 	char char_hscore[10];
 	sprintf_s(char_hscore, "%.5d", high_score);
 	App->fonts->Blit(489, 475, orange_font, char_hscore);
+
+	App->render->Blit(balls_left.image, 310, 455, &balls_left.rect);
+
+	for (int i = 0; i < losed_balls; i++) {
+		App->render->Blit(lose_ball.image, 313+i*10, 470, &lose_ball.rect);
+	}
 }
 
 void PinballBoard::CreateBall()

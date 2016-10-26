@@ -104,15 +104,23 @@ private:
 	Sprite		pink_web2;
 	Sprite		pink_web3;
 
+	kicker_info mill;
+	Sprite		mill_sprite;
+
 	//UI
 	Sprite		score_right;
 	Sprite		score_left;
+	int			score;
+	int			high_score;
+
+	Sprite		balls_left;
+	Sprite		lose_ball;
+	int			losed_balls = 0;
 
 	int			orange_font;
 	int			white_font;
 
-	int			score;
-	int			high_score;
+
 
 };
 
