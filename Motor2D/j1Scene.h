@@ -36,7 +36,8 @@ public:
 private:
 	uint launch_down;
 	uint launch_up;
-	uint kicker;
+	uint kicker_down;
+	uint Kicker_up;
 };
 
 #endif // __j1SCENE_H__

@@ -35,7 +35,10 @@ bool j1Scene::Awake(pugi::xml_node& node)
 bool j1Scene::Start()
 {
 	launch_down = App->audio->LoadFx("Sounds/sound 179.ogg");
-	launch_up = App->audio->LoadFx("Sounds/sound 179.ogg");
+	launch_up = App->audio->LoadFx("Sounds/sound 533 (launch_ball).ogg");
+	kicker_down = App->audio->LoadFx("Sounds/sound 519 (flipper_down).ogg");
+	Kicker_up = App->audio->LoadFx("Sounds/sound 518 (flipper_up).ogg");
+
 	return true;
 }
 
@@ -68,7 +71,17 @@ bool j1Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 		App->pinball->Restart();
 	}
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN) {
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN) {
+		p2List_item<kicker_info>* left_kick = App->pinball->left_kickers.start;
+		while (left_kick != NULL) {
+			left_kick->data.joint->SetMotorSpeed(-motor_speed);
+
+			left_kick = left_kick->next;
+		}
+		App->pinball->top_kicker.joint->SetMotorSpeed(motor_speed);
+		App->audio->PlayFx(kicker_down);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		p2List_item<kicker_info>* left_kick = App->pinball->left_kickers.start;
 		while (left_kick != NULL) {
 			left_kick->data.joint->SetMotorSpeed(-motor_speed);
@@ -84,8 +97,19 @@ bool j1Scene::Update(float dt)
 
 			left_kick = left_kick->next;
 		}
+		App->audio->PlayFx(Kicker_up);
 	}
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN) {
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN) {
+		p2List_item<kicker_info>* right_kick = App->pinball->right_kickers.start;
+		while (right_kick != NULL) {
+			right_kick->data.joint->SetMotorSpeed(motor_speed);
+
+			right_kick = right_kick->next;
+		}
+		App->pinball->top_kicker.joint->SetMotorSpeed(-motor_speed);
+		App->audio->PlayFx(kicker_down);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		p2List_item<kicker_info>* right_kick = App->pinball->right_kickers.start;
 		while (right_kick != NULL) {
 			right_kick->data.joint->SetMotorSpeed(motor_speed);
@@ -101,15 +125,23 @@ bool j1Scene::Update(float dt)
 
 			right_kick = right_kick->next;
 		}
+		App->audio->PlayFx(Kicker_up);
 	}
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		
 		App->pinball->launcher.joint->SetMotorSpeed(1);
 		App->pinball->launcher.joint->SetMaxMotorForce(2);
 	}
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
+
+		App->pinball->launcher.joint->SetMotorSpeed(1);
+		App->pinball->launcher.joint->SetMaxMotorForce(2);
+		App->audio->PlayFx(launch_down);
+	}
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP) {
 		App->pinball->launcher.joint->SetMotorSpeed(-15);
 		App->pinball->launcher.joint->SetMaxMotorForce(20);
+		App->audio->PlayFx(launch_up);
 	}
 
 	App->pinball->Draw();
